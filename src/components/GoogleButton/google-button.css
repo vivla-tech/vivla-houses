@@ -1,0 +1,30 @@
+.login-google-container {
+    display: flex;
+    align-items: center;
+    margin: 20px auto;
+    position: relative;
+  }
+
+  .google-logo {
+    background-color: #fff;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 15px;
+    border-radius: 5px;
+  }
+
+  .google-login-btn {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-style: none;
+    border-radius: 5px;
+    width: 100%;
+    text-transform: uppercase;
+    font-family: var(--secondary-font);
+    font-size: 15px;
+    line-height: 26.6px;
+    letter-spacing: 1.14px;
+    outline: 1px solid #0101014f;
+
+  }

@@ -1,6 +1,7 @@
 import { useAuth } from "../../context/authContext"
 import GoogleLogo from './logo_google_icon.png'
 import { useNavigate } from "react-router-dom";
+import './google-button.css';
 
 export default function GoogleButton() {
     const { loginWithGoogle } = useAuth()

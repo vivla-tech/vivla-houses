@@ -13,7 +13,11 @@ export default function Home() {
 
           <h1>Vivla Homes</h1>
           <p>Manage and submit our Vivla Homes!</p>
-          <GoogleButton />
+
+          {user
+            ? <h3>Welcome back!</h3>
+            : <GoogleButton />
+          }
         </div>
 
 
