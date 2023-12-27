@@ -1,7 +1,9 @@
 .home {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     flex-wrap: wrap;
-    align-content: center;   
+    align-content: center;
+    margin-block: 10%;
+    padding-inline: 10%;
 }
