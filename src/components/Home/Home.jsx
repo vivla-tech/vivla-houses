@@ -1,17 +1,25 @@
 import { useAuth } from "../../context/authContext";
 import GoogleButton from "../GoogleButton/GoogleButton";
+import homeImage from '../../assets/girl-with-laptop.svg';
+import './home.css';
 
 export default function Home() {
   const { user } = useAuth()
 
-
-
   return (
     <>
-      <h1>Vivla Houses</h1>
+      <main className="home">
+        <div>
+
+          <h1>Vivla Homes</h1>
+          <p>Manage and submit our Vivla Homes!</p>
+          <GoogleButton />
+        </div>
 
 
-      <GoogleButton />
+        <img src={homeImage} alt='girl with laptop' />
+
+      </main>
     </>
   );
 }
