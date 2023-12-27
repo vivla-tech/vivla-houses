@@ -1,6 +1,7 @@
 import { useAuth } from "../../context/authContext";
 import GoogleButton from "../GoogleButton/GoogleButton";
 import homeImage from '../../assets/girl-with-laptop.svg';
+import Navbar from "../Navbar/Navbar";
 import './home.css';
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
 
   return (
     <>
+      <Navbar />
       <main className="home">
         <div>
 
