@@ -2,8 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-import Profile from "./components/Profile/Profile";
+import Homes from "./components/Homes/Homes";
 import { AuthProvider } from "./context/authContext";
+import HomesForm from "./components/HomesForm/HomesForm";
 // import ProtectedRoute from "./components/ProtectedRoutes";
 
 function App() {
@@ -15,7 +16,8 @@ function App() {
           />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='profile' element={<Profile />} />
+          <Route path='/homes' element={<Homes />} />
+          <Route path='/form' element={<HomesForm />} />
         </Routes>
       </AuthProvider>
     </>
