@@ -6,7 +6,9 @@ import './navbar.css';
 function Navbar() {
     return (
         <nav className='navbar'>
-            <img src={logoVivla} alt="vivla name" />
+            <Link to="/">
+                <img src={logoVivla} alt="vivla name" />
+            </Link>
 
             <Link to="/homes"> Homes</Link>
             <Link to="/form"> New home</Link>
