@@ -10,11 +10,13 @@
     width: 25px;
     height: 25px;
     position: absolute;
-    left: 15px;
+    left: 10px;
     border-radius: 5px;
   }
 
   .google-login-btn {
+    display: flex;
+    justify-content: flex-end;
     background-color: #fff;
     padding: 10px 20px;
     border-style: none;
