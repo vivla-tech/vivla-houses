@@ -8,13 +8,12 @@ import { getFirestore } from 'firebase/firestore'
 
 // añade tu configuración de Firebase aquí
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
-  measurementId: "",
+  apiKey: "AIzaSyBtCv5B-H9tlTk3PHOEXnhYLu27GiYs76Y",
+  authDomain: "vivla-houses.firebaseapp.com",
+  projectId: "vivla-houses",
+  storageBucket: "vivla-houses.appspot.com",
+  messagingSenderId: "443610407104",
+  appId: "1:443610407104:web:a3d23d28346ad4a9008d25"
 };
 
 // const analytics = getAnalytics(app);
