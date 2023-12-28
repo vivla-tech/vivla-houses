@@ -5,7 +5,7 @@
 }
 
 .form-container {
-    width: 400px;
+    width: 500px;
     margin:auto;
 }
 
@@ -19,7 +19,7 @@
 .homes-form select,
 .homes-form textarea {
     background-color: #fff;
-    border: 1px solid #2e2d2d;
+    border: 1px solid #9c9797;
     padding: 10px;
     border-radius: 4px;
     font-size: 15px;
@@ -44,4 +44,16 @@
     flex-direction: row;
     gap: 10px;
     margin-left: 5px;
+}
+
+.homes-form button[type="submit"] {
+    border: 1px solid #fff;
+    background-color: #020202;
+    color: #f2f2f2;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-family: var(--secondary-font);
+    
+
 }
