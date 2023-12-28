@@ -3,7 +3,6 @@ import { useAuth } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { firestore } from "../../firebase/config/firebase";
 import { doc, setDoc } from 'firebase/firestore'
-import '../styles.css';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -14,7 +13,6 @@ function Register() {
     phoneNumber: ''
   });
   const { signUp } = useAuth()
-  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -42,7 +40,6 @@ function Register() {
 
       })
 
-      navigate('/')
     } catch (error) {
       console.log(error)
       // TODO: mejorar manejo de errores
