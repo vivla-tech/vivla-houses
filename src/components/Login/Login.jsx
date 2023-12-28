@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useAuth } from "../../context/authContext";
-import { useNavigate } from "react-router-dom";
-import '../styles.css';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -9,7 +7,6 @@ function Login() {
     password: "",
   });
   const { login } = useAuth()
-  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -23,7 +20,6 @@ function Login() {
     try {
 
       login(formData.email, formData.password)
-      navigate('/')
     } catch (error) {
       console.log(error)
       // TODO: mejorar manejo de errores
