@@ -1,8 +1,10 @@
+.form-container {
+    width: 400px;
+    margin:auto;
+}
 .homes-form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 15px;
 
 }
@@ -10,5 +12,11 @@
 .homes-form div {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+}
+
+ .homes-form .furnished {
+    display: flex;
+    flex-direction: row;
     gap: 10px;
 }
