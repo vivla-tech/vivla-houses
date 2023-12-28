@@ -12,7 +12,7 @@ function HomesForm() {
 
     return (
         <>
-            <h2 className='title'>Add a new VIVLA home </h2>
+            <h2 className='title'>Add a new VIVLA home &#128516; </h2>
             <section className='form-container'>
 
                 <form
@@ -21,9 +21,10 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="home">
-                            Home Name*
+                            Home name*
                         </label>
                         <input
+                            placeholder='Saona, Ribes...'
                             id="home"
                             type="text"
                             {...register('homeName')}
@@ -46,7 +47,7 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="market">
-                            Micro Market*
+                            Micro market*
                         </label>
                         <select id="market" {...register('market')}>
                             <option hidden defaultValue>Select a micro market </option>
@@ -63,6 +64,7 @@ function HomesForm() {
                             Address*
                         </label>
                         <input
+                            placeholder='C/ de Arguensola, 25'
                             id="address"
                             type="text"
                             {...register('address')}
@@ -74,6 +76,7 @@ function HomesForm() {
                             Coordinates*
                         </label>
                         <input
+                            placeholder='latitude, longitude (e.g: 38.7959924, 1.3175908)'
                             id="coordinates"
                             type="text"
                             {...register('coordinates')}
@@ -93,7 +96,7 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="bedrooms">
-                            Nº Bedrooms*
+                            Nº bedrooms*
                         </label>
                         <input
                             id="bedrooms"
@@ -104,7 +107,7 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="bathrooms">
-                            Nº Bathrooms*
+                            Nº bathrooms*
                         </label>
                         <input
                             id="bathrooms"
@@ -137,7 +140,7 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="homeCollection">
-                            Home Collection*
+                            Home collection*
                         </label>
                         <select id="homeCollection" {...register('homeCollection')}>
                             <option hidden defaultValue > Select Home Collection </option>
@@ -149,10 +152,10 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="homeTypes">
-                            Home Types*
+                            Home types*
                         </label>
                         <select id="homeTypes" {...register('homeTypes')} >
-                            <option hidden defaultValue > Select Home Type </option>
+                            <option hidden defaultValue > Select home type </option>
                             <option value="Piso"> Piso </option>
                             <option value="Villa">Villa</option>
                         </select>
@@ -160,10 +163,10 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="homeSubtype">
-                            Home Subtype*
+                            Home subtype*
                         </label>
                         <select id="homeSubtype" {...register('homeSubtype')} >
-                            <option hidden defaultValue > Select Home Subtype </option>
+                            <option hidden defaultValue > Select home subtype </option>
                             <option value="Adosado"> Adosado </option>
                             <option value="Aislado">Aislado</option>
                             <option value="Atico">Ático</option>
@@ -175,10 +178,10 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="homeStatus">
-                            Home Status*
+                            Home status*
                         </label>
                         <select id="homeStatus" {...register('homeStatus')} >
-                            <option hidden defaultValue > Select Home Status </option>
+                            <option hidden defaultValue > Select home status </option>
                             <option value="2Mano"> 2º Mano </option>
                             <option value="Aislado">Aislado</option>
                         </select>
@@ -197,7 +200,7 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="touristLicense">
-                            Tourist License*
+                            Tourist license*
                         </label>
                         <select id="touristLicense" {...register('touristLicense')} >
                             <option hidden defaultValue > Select one option </option>
@@ -225,6 +228,7 @@ function HomesForm() {
                             Video URL
                         </label>
                         <input
+                            placeholder='Enter video URL'
                             id="video"
                             type="text"
                             {...register('video')}
@@ -236,6 +240,7 @@ function HomesForm() {
                             Matterport URL
                         </label>
                         <input
+                            placeholder='Enter matterport URL'
                             id="matterport"
                             type="text"
                             {...register('matterport')}
@@ -244,7 +249,7 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="plots">
-                            Add Plots*
+                            Add plots*
                         </label>
                         <input
                             id="plots"
@@ -259,6 +264,7 @@ function HomesForm() {
                             Description*
                         </label>
                         <textarea
+                            placeholder='Your message...'
                             id="description"
                             {...register('description')}
                         />
@@ -266,7 +272,7 @@ function HomesForm() {
 
                     <div>
                         <label htmlFor="amenities">
-                            Add amenities(At least three)*
+                            Amenities (At least three)*
                         </label>
                         <select id="amenities" multiple {...register('amenities')} >
                             <option hidden defaultValue > Add amenities</option>
@@ -297,6 +303,7 @@ function HomesForm() {
                             Internal notes
                         </label>
                         <textarea
+                            placeholder='If you need add additional data type here :) '
                             id="notes"
                             {...register('internalNotes')}
                         />
