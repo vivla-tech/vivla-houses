@@ -12,7 +12,7 @@ function HomesForm() {
 
     return (
         <>
-            <h2>Add a new VIVLA home </h2>
+            <h2 className='title'>Add a new VIVLA home </h2>
             <section className='form-container'>
 
                 <form
