@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import './homes-form.css';
 
 function HomesForm() {
     const {
@@ -12,17 +13,26 @@ function HomesForm() {
     return (
         <>
             <h2>Add a new VIVLA home </h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <label>
-                    Home Name*
+            <form
+                className='homes-form'
+                onSubmit={handleSubmit(onSubmit)}>
+
+                <div>
+                    <label htmlFor="home">
+                        Home Name*
+                    </label>
                     <input
+                        id="home"
                         type="text"
                         {...register('homeName')}
                     />
-                </label>
-                <label>
-                    Hub*
-                    <select {...register('hub')}>
+                </div>
+
+                <div>
+                    <label htmlFor="hub">
+                        Hub*
+                    </label>
+                    <select id="hub" {...register('hub')}>
                         <option hidden selected>Select a Hub </option>
                         <option value="Barcelona">Barcelona</option>
                         <option value="Formentera">Formentera</option>
@@ -30,10 +40,13 @@ function HomesForm() {
                         <option value="Madrid">Madrid</option>
                         <option value="Other">Other</option>
                     </select>
-                </label>
-                <label>
-                    Micro Market*
-                    <select {...register('market')}>
+                </div>
+
+                <div>
+                    <label htmlFor="market">
+                        Micro Market*
+                    </label>
+                    <select id="market" {...register('market')}>
                         <option hidden selected>Select a micro market </option>
                         <option value="Barcelona">Barcelona</option>
                         <option value="Formentera">Formentera</option>
@@ -41,76 +54,113 @@ function HomesForm() {
                         <option value="Madrid">Madrid</option>
                         <option value="Other">Other</option>
                     </select>
-                </label>
-                <label>
-                    Address*
+                </div>
+
+                <div>
+                    <label htmlFor="address">
+                        Address*
+                    </label>
                     <input
+                        id="address"
                         type="text"
                         {...register('address')}
                     />
-                </label>
-                <label>
-                    Coordinates*
+                </div>
+
+                <div>
+                    <label ktmlFor="coordinates">
+                        Coordinates*
+                    </label>
                     <input
+                        id="coordinates"
                         type="text"
                         {...register('coordinates')}
                     />
-                </label>
-                <label>
-                    Price*
+                </div>
+
+                <div>
+                    <label htmlFor="price">
+                        Price*
+                    </label>
                     <input
+                        id="price"
                         type="number"
                         {...register('price')}
                     />
-                </label>
-                <label>
-                    Nº Bedrooms*
+                </div>
+
+                <div>
+                    <label htmlFor="bedrooms">
+                        Nº Bedrooms*
+                    </label>
                     <input
+                        id="bedrooms"
                         type="number"
                         {...register('bedrooms')}
                     />
-                </label>
-                <label>
-                    Nº Bathrooms*
+                </div>
+
+                <div>
+                    <label htmlFor="bathrooms">
+                        Nº Bathrooms*
+                    </label>
                     <input
+                        id="bathrooms"
                         type="number"
                         {...register('bathrooms')}
                     />
-                </label>
-                <label>
-                    Home SQM*
+                </div>
+
+                <div>
+                    <label htmlFor="homeSQM">
+                        Home SQM*
+                    </label>
                     <input
+                        id="homeSQM"
                         type="number"
                         {...register('homeSQM')}
                     />
-                </label>
-                <label>
-                    Plot SQM*
+                </div>
+
+                <div>
+                    <label htmlFor="plotSQM">
+                        Plot SQM*
+                    </label>
                     <input
+                        id="plotSQM"
                         type="number"
                         {...register('plotSQM')}
                     />
-                </label>
-                <label>
-                    Home Collection*
-                    <select {...register('homeCollection')}>
+                </div>
+
+                <div>
+                    <label htmlFor="homeCollection">
+                        Home Collection*
+                    </label>
+                    <select id="homeCollection" {...register('homeCollection')}>
                         <option hidden selected > Select Home Collection </option>
                         <option value="City"> City </option>
                         <option value="Mountain">Mountain</option>
                         <option value="Sea">Sea</option>
                     </select>
-                </label>
-                <label>
-                    Home Types*
-                    <select {...register('homeTypes')} >
+                </div>
+
+                <div>
+                    <label htmlFor="homeTypes">
+                        Home Types*
+                    </label>
+                    <select id="homeTypes" {...register('homeTypes')} >
                         <option hidden selected > Select Home Type </option>
                         <option value="Piso"> Piso </option>
                         <option value="Villa">Villa</option>
                     </select>
-                </label>
-                <label>
-                    Home Subtype*
-                    <select {...register('homeSubtype')} >
+                </div>
+
+                <div>
+                    <label htmlFor="homeSubtype">
+                        Home Subtype*
+                    </label>
+                    <select id="homeSubtype" {...register('homeSubtype')} >
                         <option hidden selected > Select Home Subtype </option>
                         <option value="Adosado"> Adosado </option>
                         <option value="Aislado">Aislado</option>
@@ -119,74 +169,104 @@ function HomesForm() {
                         <option value="Intermedio">Intermedio</option>
                         <option value="Pareado">Pareado</option>
                     </select>
-                </label>
-                <label>
-                    Home Status*
-                    <select {...register('homeStatus')} >
+                </div>
+
+                <div>
+                    <label htmlFor="homeStatus">
+                        Home Status*
+                    </label>
+                    <select id="homeStatus" {...register('homeStatus')} >
                         <option hidden selected > Select Home Status </option>
                         <option value="2Mano"> 2º Mano </option>
                         <option value="Aislado">Aislado</option>
                     </select>
-                </label>
-                <label>
+                </div>
+
+                <div>
                     <input
+                        id="furnished"
                         type="checkbox"
                         {...register('isFurnished', { value: 'yes' })}
                     />
-                    Mark if the house is furnished
-                </label>
+                    <label htmlFor="furnished">
+                        Mark if the house is furnished
+                    </label>
+                </div>
 
-                <label>
-                    Tourist License*
-                    <select {...register('touristLicense')} >
+                <div>
+                    <label htmlFor="touristLicense">
+                        Tourist License*
+                    </label>
+                    <select id="touristLicense" {...register('touristLicense')} >
                         <option hidden selected > Select one option </option>
                         <option value="Does not have tourist license"> Does not have a tourist license </option>
                         <option value="Does not have and cannot obtain it"> Does not have and cannot obtain it</option>
                         <option value="Does not have but can obtain it"> Does not have but can obtain it</option>
                         <option value="Has a tourist license"> Has a tourist license</option>
                     </select>
-                </label>
-                <label>
-                    Add images*
+                </div>
+
+                <div>
+                    <label htmlFor="images">
+                        Add images*
+                    </label>
                     <input
+                        id="images"
                         type="file"
                         {...register('images')}
                         multiple
                     />
-                </label>
-                <label>
-                    Video URL
+                </div>
+
+                <div>
+                    <label htmlFor="video">
+                        Video URL
+                    </label>
                     <input
+                        id="video"
                         type="text"
                         {...register('video')}
                     />
-                </label>
-                <label>
-                    Matterport URL
+                </div>
+
+                <div>
+                    <label htmlFor="matterport">
+                        Matterport URL
+                    </label>
                     <input
+                        id="matterport"
                         type="text"
                         {...register('matterport')}
                     />
-                </label>
+                </div>
 
-                <label>
-                    Add Plots*
+                <div>
+                    <label htmlFor="plots">
+                        Add Plots*
+                    </label>
                     <input
+                        id="plots"
                         type="file"
                         {...register('plots')}
                         multiple
                     />
-                </label>
-                <label>
-                    Description*
+                </div>
+
+                <div>
+                    <label htmlFor="description">
+                        Description*
+                    </label>
                     <textarea
+                        id="description"
                         {...register('description')}
                     />
-                </label>
+                </div>
 
-                <label>
-                    Add amenities(At least three)*
-                    <select multiple {...register('amenties')} >
+                <div>
+                    <label htmlFor="amenities">
+                        Add amenities(At least three)*
+                    </label>
+                    <select id="amenities" multiple {...register('amenities')} >
                         <option hidden selected > Add amenities</option>
                         <option value="24/7 Concierge"> 24/7 Concierge</option>
                         <option value="Aerothermia"> Aerothermia</option>
@@ -196,24 +276,31 @@ function HomesForm() {
                         <option value="Alarm services"> Alarm services</option>
                         <option value="Barbecue"> Barbecue</option>
                     </select>
-                </label>
+                </div>
 
-                <label>
-                    Visibility*
-                    <select {...register('visibility')} >
+                <div>
+                    <label htmlFor="visibility">
+                        Visibility*
+                    </label>
+                    <select id="visibility" {...register('visibility')} >
                         <option hidden selected > Set visibility </option>
                         <option value="Hidden"> Hidden</option>
                         <option value="Private"> Private</option>
                         <option value="Public"> Public</option>
                     </select>
-                </label>
+                </div>
 
-                <label>
-                    Internal notes
+                <div>
+                    <label htmlFor="notes">
+                        Internal notes
+                    </label>
                     <textarea
+                        id="notes"
                         {...register('internalNotes')}
                     />
-                </label>
+                </div>
+
+
                 <button type="submit"> Submit </button>
             </form>
         </>
