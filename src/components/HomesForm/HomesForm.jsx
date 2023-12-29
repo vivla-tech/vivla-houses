@@ -43,7 +43,7 @@ function HomesForm() {
                             id="hub"
                             {...register('hub',
                                 { required: '❌ Hub is required' })}>
-                            <option hidden defaultValue>Select a Hub </option>
+                            <option hidden value="">Select a Hub </option>
                             <option value="Barcelona">Barcelona</option>
                             <option value="Formentera">Formentera</option>
                             <option value="Ibiza">Ibiza</option>
@@ -61,7 +61,7 @@ function HomesForm() {
                             id="market"
                             {...register('market',
                                 { required: '❌ Market is required' })}>
-                            <option hidden defaultValue>Select a micro market </option>
+                            <option hidden value="">Select a micro market </option>
                             <option value="Barcelona">Barcelona</option>
                             <option value="Formentera">Formentera</option>
                             <option value="Ibiza">Ibiza</option>
@@ -171,7 +171,7 @@ function HomesForm() {
                             id="homeCollection"
                             {...register('homeCollection',
                                 { required: '❌ Home collection is required' })}>
-                            <option hidden defaultValue > Select Home Collection </option>
+                            <option hidden value="" > Select Home Collection </option>
                             <option value="City"> City </option>
                             <option value="Mountain">Mountain</option>
                             <option value="Sea">Sea</option>
@@ -187,7 +187,7 @@ function HomesForm() {
                             id="homeTypes"
                             {...register('homeTypes',
                                 { required: '❌ Home types are required' })} >
-                            <option hidden defaultValue > Select home type </option>
+                            <option hidden value="" > Select home type </option>
                             <option value="Piso"> Piso </option>
                             <option value="Villa">Villa</option>
                         </select>
@@ -202,7 +202,7 @@ function HomesForm() {
                             id="homeSubtype"
                             {...register('homeSubtype',
                                 { required: '❌ Home subtypes are required' })} >
-                            <option hidden defaultValue > Select home subtype </option>
+                            <option hidden value="" > Select home subtype </option>
                             <option value="Adosado"> Adosado </option>
                             <option value="Aislado">Aislado</option>
                             <option value="Atico">Ático</option>
@@ -221,7 +221,7 @@ function HomesForm() {
                             id="homeStatus"
                             {...register('homeStatus',
                                 { required: '❌ Home status is required' })} >
-                            <option hidden defaultValue > Select home status </option>
+                            <option hidden value="" > Select home status </option>
                             <option value="2Mano"> 2º Mano </option>
                             <option value="Aislado">Aislado</option>
                         </select>
@@ -247,7 +247,7 @@ function HomesForm() {
                             id="touristLicense"
                             {...register('touristLicense',
                                 { required: '❌ Tourist license option is required' })} >
-                            <option hidden defaultValue > Select one option </option>
+                            <option hidden value="" > Select one option </option>
                             <option value="Does not have tourist license"> Does not have a tourist license </option>
                             <option value="Does not have and cannot obtain it"> Does not have and cannot obtain it</option>
                             <option value="Does not have but can obtain it"> Does not have but can obtain it</option>
@@ -330,7 +330,7 @@ function HomesForm() {
                             multiple
                             {...register('amenities',
                                 { required: '❌ Amenities are required' })} >
-                            <option hidden defaultValue > Add amenities</option>
+                            <option hidden value="" > Add amenities</option>
                             <option value="24/7 Concierge"> 24/7 Concierge</option>
                             <option value="Aerothermia"> Aerothermia</option>
                             <option value="Air conditioning"> Air conditioning</option>
@@ -350,7 +350,7 @@ function HomesForm() {
                             id="visibility"
                             {...register('visibility',
                                 { required: '❌ Visibility is required' })} >
-                            <option hidden defaultValue > Set visibility </option>
+                            <option hidden value="" > Set visibility </option>
                             <option value="Hidden"> Hidden</option>
                             <option value="Private"> Private</option>
                             <option value="Public"> Public</option>
