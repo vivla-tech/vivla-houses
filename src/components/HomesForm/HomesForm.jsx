@@ -4,7 +4,8 @@ import './homes-form.css';
 function HomesForm() {
     const {
         register,
-        handleSubmit
+        handleSubmit,
+        formState: { errors }
     } = useForm();
 
     const onSubmit = (data) => console.log(data);
@@ -27,15 +28,21 @@ function HomesForm() {
                             placeholder='Saona, Ribes...'
                             id="home"
                             type="text"
-                            {...register('homeName', { required: true })}
+                            {...register('homeName',
+                                { required: '❌ Name is required' })}
                         />
                     </div>
+                    {errors.homeName && <p>{errors.homeName.message}</p>}
+
 
                     <div>
                         <label htmlFor="hub">
                             Hub *
                         </label>
-                        <select id="hub" {...register('hub', { required: true })}>
+                        <select
+                            id="hub"
+                            {...register('hub',
+                                { required: '❌ Hub is required' })}>
                             <option hidden defaultValue>Select a Hub </option>
                             <option value="Barcelona">Barcelona</option>
                             <option value="Formentera">Formentera</option>
@@ -44,12 +51,16 @@ function HomesForm() {
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    {errors.hub && <p>{errors.hub.message}</p>}
 
                     <div>
                         <label htmlFor="market">
                             Micro market *
                         </label>
-                        <select id="market" {...register('market', { required: true })}>
+                        <select
+                            id="market"
+                            {...register('market',
+                                { required: '❌ Market is required' })}>
                             <option hidden defaultValue>Select a micro market </option>
                             <option value="Barcelona">Barcelona</option>
                             <option value="Formentera">Formentera</option>
@@ -58,6 +69,7 @@ function HomesForm() {
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    {errors.market && <p>{errors.market.message}</p>}
 
                     <div>
                         <label htmlFor="address">
@@ -67,9 +79,11 @@ function HomesForm() {
                             placeholder='C/ de Arguensola, 25'
                             id="address"
                             type="text"
-                            {...register('address', { required: true })}
+                            {...register('address',
+                                { required: '❌ Adress is required' })}
                         />
                     </div>
+                    {errors.address && <p>{errors.address.message}</p>}
 
                     <div>
                         <label htmlFor="coordinates">
@@ -79,9 +93,11 @@ function HomesForm() {
                             placeholder='latitude, longitude (e.g: 38.7959924, 1.3175908)'
                             id="coordinates"
                             type="text"
-                            {...register('coordinates', { required: true })}
+                            {...register('coordinates',
+                                { required: '❌ Coordinates are required' })}
                         />
                     </div>
+                    {errors.coordinates && <p>{errors.coordinates.message}</p>}
 
                     <div>
                         <label htmlFor="price">
@@ -90,9 +106,11 @@ function HomesForm() {
                         <input
                             id="price"
                             type="number"
-                            {...register('price', { required: true })}
+                            {...register('price',
+                                { required: '❌ Price is required' })}
                         />
                     </div>
+                    {errors.price && <p>{errors.price.message}</p>}
 
                     <div>
                         <label htmlFor="bedrooms">
@@ -101,9 +119,11 @@ function HomesForm() {
                         <input
                             id="bedrooms"
                             type="number"
-                            {...register('bedrooms', { required: true })}
+                            {...register('bedrooms',
+                                { required: '❌ Beedrooms are required' })}
                         />
                     </div>
+                    {errors.bedrooms && <p>{errors.bedrooms.message}</p>}
 
                     <div>
                         <label htmlFor="bathrooms">
@@ -112,9 +132,11 @@ function HomesForm() {
                         <input
                             id="bathrooms"
                             type="number"
-                            {...register('bathrooms', { required: true })}
+                            {...register('bathrooms',
+                                { required: '❌ Bathrooms are required' })}
                         />
                     </div>
+                    {errors.bathrooms && <p>{errors.bathrooms.message}</p>}
 
                     <div>
                         <label htmlFor="homeSQM">
@@ -123,9 +145,12 @@ function HomesForm() {
                         <input
                             id="homeSQM"
                             type="number"
-                            {...register('homeSQM', { required: true })}
+                            {...register('homeSQM',
+                                { required: '❌ Home SQM is required' })}
                         />
                     </div>
+                    {errors.homeSQM && <p>{errors.homeSQM.message}</p>}
+
 
                     <div>
                         <label htmlFor="plotSQM">
@@ -142,30 +167,41 @@ function HomesForm() {
                         <label htmlFor="homeCollection">
                             Home collection *
                         </label>
-                        <select id="homeCollection" {...register('homeCollection', { required: true })}>
+                        <select
+                            id="homeCollection"
+                            {...register('homeCollection',
+                                { required: '❌ Home collection is required' })}>
                             <option hidden defaultValue > Select Home Collection </option>
                             <option value="City"> City </option>
                             <option value="Mountain">Mountain</option>
                             <option value="Sea">Sea</option>
                         </select>
                     </div>
+                    {errors.homeCollection && <p>{errors.homeCollection.message}</p>}
 
                     <div>
                         <label htmlFor="homeTypes">
                             Home types *
                         </label>
-                        <select id="homeTypes" {...register('homeTypes', { required: true })} >
+                        <select
+                            id="homeTypes"
+                            {...register('homeTypes',
+                                { required: '❌ Home types are required' })} >
                             <option hidden defaultValue > Select home type </option>
                             <option value="Piso"> Piso </option>
                             <option value="Villa">Villa</option>
                         </select>
                     </div>
+                    {errors.homeTypes && <p>{errors.homeTypes.message}</p>}
 
                     <div>
                         <label htmlFor="homeSubtype">
                             Home subtype *
                         </label>
-                        <select id="homeSubtype" {...register('homeSubtype', { required: true })} >
+                        <select
+                            id="homeSubtype"
+                            {...register('homeSubtype',
+                                { required: '❌ Home subtypes are required' })} >
                             <option hidden defaultValue > Select home subtype </option>
                             <option value="Adosado"> Adosado </option>
                             <option value="Aislado">Aislado</option>
@@ -175,23 +211,28 @@ function HomesForm() {
                             <option value="Pareado">Pareado</option>
                         </select>
                     </div>
+                    {errors.homeSubtype && <p>{errors.homeSubtype.message}</p>}
 
                     <div>
                         <label htmlFor="homeStatus">
                             Home status *
                         </label>
-                        <select id="homeStatus" {...register('homeStatus', { required: true })} >
+                        <select
+                            id="homeStatus"
+                            {...register('homeStatus',
+                                { required: '❌ Home status is required' })} >
                             <option hidden defaultValue > Select home status </option>
                             <option value="2Mano"> 2º Mano </option>
                             <option value="Aislado">Aislado</option>
                         </select>
                     </div>
+                    {errors.homeStatus && <p>{errors.homeStatus.message}</p>}
 
                     <div className='furnished'>
                         <input
                             id="furnished"
                             type="checkbox"
-                            {...register('isFurnished', { required: true })}
+                            {...register('isFurnished')}
                         />
                         <label htmlFor="furnished">
                             Mark if the house is furnished
@@ -202,7 +243,10 @@ function HomesForm() {
                         <label htmlFor="touristLicense">
                             Tourist license *
                         </label>
-                        <select id="touristLicense" {...register('touristLicense', { required: true })} >
+                        <select
+                            id="touristLicense"
+                            {...register('touristLicense',
+                                { required: '❌ Tourist license option is required' })} >
                             <option hidden defaultValue > Select one option </option>
                             <option value="Does not have tourist license"> Does not have a tourist license </option>
                             <option value="Does not have and cannot obtain it"> Does not have and cannot obtain it</option>
@@ -210,6 +254,7 @@ function HomesForm() {
                             <option value="Has a tourist license"> Has a tourist license</option>
                         </select>
                     </div>
+                    {errors.touristLicense && <p>{errors.touristLicense.message}</p>}
 
                     <div>
                         <label htmlFor="images">
@@ -218,10 +263,14 @@ function HomesForm() {
                         <input
                             id="images"
                             type="file"
-                            {...register('images', { required: true })}
+                            {...register('images',
+                                { required: '❌ Images are required' })}
                             multiple
                         />
                     </div>
+                    {errors.images && <p>{errors.images.message}</p>}
+
+
 
                     <div>
                         <label htmlFor="video">
@@ -266,15 +315,21 @@ function HomesForm() {
                         <textarea
                             placeholder='Your message...'
                             id="description"
-                            {...register('description', { required: true })}
+                            {...register('description',
+                                { required: '❌ Description is required' })}
                         />
                     </div>
+                    {errors.description && <p>{errors.description.message}</p>}
 
                     <div>
                         <label htmlFor="amenities">
                             Amenities (At least three) *
                         </label>
-                        <select id="amenities" multiple {...register('amenities', { required: true })} >
+                        <select
+                            id="amenities"
+                            multiple
+                            {...register('amenities',
+                                { required: '❌ Amenities are required' })} >
                             <option hidden defaultValue > Add amenities</option>
                             <option value="24/7 Concierge"> 24/7 Concierge</option>
                             <option value="Aerothermia"> Aerothermia</option>
@@ -285,18 +340,24 @@ function HomesForm() {
                             <option value="Barbecue"> Barbecue</option>
                         </select>
                     </div>
+                    {errors.amenities && <p>{errors.amenities.message}</p>}
 
                     <div>
                         <label htmlFor="visibility">
                             Visibility *
                         </label>
-                        <select id="visibility" {...register('visibility', { required: true })} >
+                        <select
+                            id="visibility"
+                            {...register('visibility',
+                                { required: '❌ Visibility is required' })} >
                             <option hidden defaultValue > Set visibility </option>
                             <option value="Hidden"> Hidden</option>
                             <option value="Private"> Private</option>
                             <option value="Public"> Public</option>
                         </select>
                     </div>
+                    {errors.visibility && <p>{errors.visibility.message}</p>}
+
 
                     <div>
                         <label htmlFor="notes">
