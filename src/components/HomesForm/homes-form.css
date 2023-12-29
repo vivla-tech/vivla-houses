@@ -60,3 +60,9 @@
     font-family: var(--secondary-font);
     
 }
+
+/* errors */
+.homes-form p {
+    color: var(--error-color);
+    margin-top: -5px;
+}
