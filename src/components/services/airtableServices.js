@@ -1,11 +1,11 @@
 import Airtable from "airtable";
 
-const { API_KEY, AIRTABLE_BASE } = process.meta.env;
+const { VITE_API_KEY, VITE_AIRTABLE_BASE } = import.meta.env;
 
 export const airtableBase = new Airtable({
-    apiKey: API_KEY
+    apiKey: VITE_API_KEY
 })
-    .base(AIRTABLE_BASE)
+    .base(VITE_AIRTABLE_BASE)
 
 
 
