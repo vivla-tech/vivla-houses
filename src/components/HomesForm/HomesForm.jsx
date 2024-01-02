@@ -1,5 +1,7 @@
 import { useForm } from 'react-hook-form';
 import './homes-form.css';
+import { useState } from 'react';
+import { airtableBase } from '../services/airtableServices';
 
 function HomesForm() {
     const {
@@ -8,8 +10,80 @@ function HomesForm() {
         formState: { errors }
     } = useForm();
 
+    const [formData, setFormData] = useState({
+        homeName: '',
+        hub: '',
+        market: '',
+        address: '',
+        coordinates: '',
+        price: 0,
+        bedrooms: 0,
+        bathrooms: 0,
+        homeSQM: 0,
+        plotSQM: 0,
+        homeCollection: '',
+        homeTypes: '',
+        homeSubtype: '',
+        homeStatus: '',
+        isFurnished: false,
+        touristLicense: '',
+        images: [],
+        video: '',
+        matterport: '',
+        plots: [],
+        description: '',
+        amenities: [],
+        visibility: '',
+        internalNotes: '',
+    });
+
     const onSubmit = (data) => console.log(data);
 
+    const handleFormSubmit = async (data) => {
+        event.preventDefault();
+
+        try {
+
+            const { images, plots, amenities } = data;
+            const imagesArray = images.split(',').map(image => ({ url: image.trim() }));
+            const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
+            const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
+            await airtableBase('homes').create([
+                {
+                    fields: {
+                        "Home Name": data.homeName,
+                        "Hub": data.hub,
+                        "Market": data.market,
+                        "Address": data.address,
+                        "Coordinates": data.coordinates,
+                        "Price": data.price,
+                        "Bedrooms": data.bedrooms,
+                        "Bathrooms": data.bathrooms,
+                        "Home SQM": data.homeSQM,
+                        "Plot SQM": data.plotSQM,
+                        "Home Collection": data.homeCollection,
+                        "Home Types": data.homeTypes,
+                        "Home Subtype": data.homeSubtype,
+                        "Home Status": data.homeStatus,
+                        "Is Furnished": data.isFurnished ? 'yes' : 'no',
+                        "Tourist License": data.touristLicense,
+                        "Images": imagesArray,
+                        "Video": data.video,
+                        "Matterport": data.matterport,
+                        "Plots": plotsString,
+                        "Description": data.description,
+                        "Amenities": amenitiesString,
+                        "Visibility": data.visibility,
+                        "Internal Notes": data.internalNotes,
+                    }
+                }
+            ])
+            console.log('submit correctly', formData)
+
+        } catch (error) {
+            console.error('error submit form', error)
+        }
+    }
 
     return (
         <>
@@ -18,7 +92,7 @@ function HomesForm() {
 
                 <form
                     className='homes-form'
-                    onSubmit={handleSubmit(onSubmit)}>
+                    onSubmit={handleSubmit(handleFormSubmit)}>
 
                     <div>
                         <label htmlFor="home">
