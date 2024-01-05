@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import './homes-form.css';
-import { useState } from 'react';
 import { airtableBase } from '../services/airtableServices';
 
 function HomesForm() {
@@ -10,44 +9,37 @@ function HomesForm() {
         formState: { errors }
     } = useForm();
 
-    const [formData, setFormData] = useState({
-        homeName: '',
-        hub: '',
-        market: '',
-        address: '',
-        coordinates: '',
-        price: 0,
-        bedrooms: 0,
-        bathrooms: 0,
-        homeSQM: 0,
-        plotSQM: 0,
-        homeCollection: '',
-        homeTypes: '',
-        homeSubtype: '',
-        homeStatus: '',
-        isFurnished: false,
-        touristLicense: '',
-        images: [],
-        video: '',
-        matterport: '',
-        plots: [],
-        description: '',
-        amenities: [],
-        visibility: '',
-        internalNotes: '',
-    });
+    const fileToBase64 = async (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
 
-    const onSubmit = (data) => console.log(data);
+            reader.onerror = reject;
+
+            reader.onload = () => {
+                resolve(reader.result.split(',')[1]); // Retorna solo los datos base64, sin el prefijo
+            };
+
+            reader.readAsDataURL(file);
+        });
+    };
+
+
 
     const handleFormSubmit = async (data) => {
-        event.preventDefault();
-
         try {
 
             const { images, plots, amenities } = data;
-            const imagesArray = images.split(',').map(image => ({ url: image.trim() }));
+            const uploadedImages = [];
+
+            for (const image of images) {
+                const base64Data = await fileToBase64(image);
+                uploadedImages.push(base64Data);
+            }
+
+            // const imagesString = Array.isArray(images) ? images.join(', ') : '';
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
             const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
+            console.log(data)
             await airtableBase('homes').create([
                 {
                     fields: {
@@ -65,9 +57,9 @@ function HomesForm() {
                         "Home Types": data.homeTypes,
                         "Home Subtype": data.homeSubtype,
                         "Home Status": data.homeStatus,
-                        "Is Furnished": data.isFurnished ? 'yes' : 'no',
+                        "Is Furnished": data.isFurnished,
                         "Tourist License": data.touristLicense,
-                        "Images": imagesArray,
+                        "Images": uploadedImages,
                         "Video": data.video,
                         "Matterport": data.matterport,
                         "Plots": plotsString,
@@ -78,7 +70,7 @@ function HomesForm() {
                     }
                 }
             ])
-            console.log('submit correctly', formData)
+            console.log('submit correctly', data)
 
         } catch (error) {
             console.error('error submit form', error)
