@@ -1,5 +1,10 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import './homes-form.css';
+import { airtableBase } from '../services/airtableServices';
+import { storage } from '../../firebase/config/firebase';
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import ImagePicker from '../ImagePicker/ImagePicker';
 
 function HomesForm() {
     const {
@@ -8,8 +13,80 @@ function HomesForm() {
         formState: { errors }
     } = useForm();
 
-    const onSubmit = (data) => console.log(data);
+    const [images, setImages] = useState([]);
+    const [fileUrls, setFileUrls] = useState([]);
 
+    const handleChange = async (e) => {
+        try {
+            const files = Array.from(e.target.files);
+
+            // Crear una referencia al storage para cada imagen y cargarla
+            const urls = await Promise.all(files.map(async (file) => {
+                const storageRef = ref(storage, `images/${file.name}`);
+                await uploadBytes(storageRef, file);
+                return getDownloadURL(storageRef);
+            }));
+
+            setImages((prevImages) => [...prevImages, ...files]);
+            setFileUrls((prevUrls) => [...prevUrls, ...urls]);
+
+            console.log('images upload:', [...images, ...files]);
+            console.log('images url upload:', [...fileUrls, ...urls]);
+        } catch (error) {
+            console.error('Error al manejar cambios en las imágenes:', error.message);
+        }
+    };
+
+
+
+
+
+    const handleFormSubmit = async (data) => {
+        try {
+
+            const { plots, amenities } = data;
+
+
+            const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
+            const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
+            const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
+            console.log(data)
+            await airtableBase('homes').create([
+                {
+                    fields: {
+                        "Home Name": data.homeName,
+                        "Hub": data.hub,
+                        "Market": data.market,
+                        "Address": data.address,
+                        "Coordinates": data.coordinates,
+                        "Price": data.price,
+                        "Bedrooms": data.bedrooms,
+                        "Bathrooms": data.bathrooms,
+                        "Home SQM": data.homeSQM,
+                        "Plot SQM": data.plotSQM,
+                        "Home Collection": data.homeCollection,
+                        "Home Types": data.homeTypes,
+                        "Home Subtype": data.homeSubtype,
+                        "Home Status": data.homeStatus,
+                        "Is Furnished": data.isFurnished,
+                        "Tourist License": data.touristLicense,
+                        "URL Images": imagesString,
+                        "Video": data.video,
+                        "Matterport": data.matterport,
+                        "Plots": plotsString,
+                        "Description": data.description,
+                        "Amenities": amenitiesString,
+                        "Visibility": data.visibility,
+                        "Internal Notes": data.internalNotes,
+                    }
+                }
+            ])
+            console.log('submit correctly', data)
+
+        } catch (error) {
+            console.error('error submit form', error)
+        }
+    }
 
     return (
         <>
@@ -18,7 +95,7 @@ function HomesForm() {
 
                 <form
                     className='homes-form'
-                    onSubmit={handleSubmit(onSubmit)}>
+                    onSubmit={handleSubmit(handleFormSubmit)}>
 
                     <div>
                         <label htmlFor="home">
@@ -261,15 +338,22 @@ function HomesForm() {
                             Add images *
                         </label>
                         <input
+                            onInput={handleChange}
                             id="images"
                             type="file"
                             {...register('images',
-                                { required: '❌ Images are required' })}
+                                {
+                                    required: '❌ Images are required',
+                                })}
                             multiple
                         />
                     </div>
                     {errors.images && <p>{errors.images.message}</p>}
 
+                    {images.length > 0
+                        ? <ImagePicker imageFile={images} />
+                        : null
+                    }
 
 
                     <div>
