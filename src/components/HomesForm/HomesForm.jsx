@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import './homes-form.css';
 import { airtableBase } from '../services/airtableServices';
+import { storage } from '../../firebase/config/firebase';
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 
 function HomesForm() {
     const {
@@ -9,34 +12,45 @@ function HomesForm() {
         formState: { errors }
     } = useForm();
 
-    const fileToBase64 = async (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
+    const [image, setImage] = useState('');
+    const [fileUrl, setFileUrl] = useState('');
 
-            reader.onerror = reject;
+    const handleChange = async (e) => {
+        const file = e.target.files[0];
 
-            reader.onload = () => {
-                resolve(reader.result.split(',')[1]); // Retorna solo los datos base64, sin el prefijo
-            };
+        // Establecer el estado de la imagen
+        setImage(file);
 
-            reader.readAsDataURL(file);
-        });
+        // Crear una referencia al storage
+        const storageRef = ref(storage, `images/${file.name}`);
+
+        try {
+            // Subir la imagen al storage
+            await uploadBytes(storageRef, file);
+
+            // Obtener la URL de descarga después de que la imagen se haya cargado
+            const urlLink = await getDownloadURL(storageRef);
+
+            // Establecer la URL de descarga en el estado
+            setFileUrl(urlLink);
+
+            console.log("Imagen cargada:", file.name);
+            console.log("URL de descarga:", fileUrl);
+        } catch (error) {
+            console.error("Error al cargar la imagen:", error.message);
+        }
     };
+
+
 
 
 
     const handleFormSubmit = async (data) => {
         try {
 
-            const { images, plots, amenities } = data;
-            const uploadedImages = [];
+            const { plots, amenities } = data;
 
-            for (const image of images) {
-                const base64Data = await fileToBase64(image);
-                uploadedImages.push(base64Data);
-            }
 
-            // const imagesString = Array.isArray(images) ? images.join(', ') : '';
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
             const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
             console.log(data)
@@ -59,7 +73,7 @@ function HomesForm() {
                         "Home Status": data.homeStatus,
                         "Is Furnished": data.isFurnished,
                         "Tourist License": data.touristLicense,
-                        "Images": uploadedImages,
+                        "URL Images": fileUrl,
                         "Video": data.video,
                         "Matterport": data.matterport,
                         "Plots": plotsString,
@@ -327,10 +341,13 @@ function HomesForm() {
                             Add images *
                         </label>
                         <input
+                            onInput={handleChange}
                             id="images"
                             type="file"
                             {...register('images',
-                                { required: '❌ Images are required' })}
+                                {
+                                    required: '❌ Images are required',
+                                })}
                             multiple
                         />
                     </div>
