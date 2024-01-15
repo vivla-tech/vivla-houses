@@ -4,6 +4,7 @@ import './homes-form.css';
 import { airtableBase } from '../services/airtableServices';
 import { storage } from '../../firebase/config/firebase';
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import ImagePicker from '../ImagePicker/ImagePicker';
 
 function HomesForm() {
     const {
@@ -29,9 +30,8 @@ function HomesForm() {
             setImages((prevImages) => [...prevImages, ...files]);
             setFileUrls((prevUrls) => [...prevUrls, ...urls]);
 
-            // Usar las imágenes y las URL directamente después de la actualización del estado
             console.log('images upload:', [...images, ...files]);
-            console.log('images url opload:', [...fileUrls, ...urls]);
+            console.log('images url upload:', [...fileUrls, ...urls]);
         } catch (error) {
             console.error('Error al manejar cambios en las imágenes:', error.message);
         }
@@ -350,6 +350,10 @@ function HomesForm() {
                     </div>
                     {errors.images && <p>{errors.images.message}</p>}
 
+                    {images.length > 0
+                        ? <ImagePicker imageFile={images} />
+                        : null
+                    }
 
 
                     <div>

@@ -1,0 +1,19 @@
+.img-container {
+    border: 1px solid #797979;
+    border-radius: 5px;
+    padding-inline: 10px;
+    padding-block: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.img-container img {
+    width: 100px;
+    height: 100px;
+}
+
+.img-container .file-name {
+    font-size: 14px;
+    color: black;
+}
