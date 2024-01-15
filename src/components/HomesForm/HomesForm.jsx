@@ -12,32 +12,28 @@ function HomesForm() {
         formState: { errors }
     } = useForm();
 
-    const [image, setImage] = useState('');
-    const [fileUrl, setFileUrl] = useState('');
+    const [images, setImages] = useState([]);
+    const [fileUrls, setFileUrls] = useState([]);
 
     const handleChange = async (e) => {
-        const file = e.target.files[0];
-
-        // Establecer el estado de la imagen
-        setImage(file);
-
-        // Crear una referencia al storage
-        const storageRef = ref(storage, `images/${file.name}`);
-
         try {
-            // Subir la imagen al storage
-            await uploadBytes(storageRef, file);
+            const files = Array.from(e.target.files);
 
-            // Obtener la URL de descarga después de que la imagen se haya cargado
-            const urlLink = await getDownloadURL(storageRef);
+            // Crear una referencia al storage para cada imagen y cargarla
+            const urls = await Promise.all(files.map(async (file) => {
+                const storageRef = ref(storage, `images/${file.name}`);
+                await uploadBytes(storageRef, file);
+                return getDownloadURL(storageRef);
+            }));
 
-            // Establecer la URL de descarga en el estado
-            setFileUrl(urlLink);
+            setImages((prevImages) => [...prevImages, ...files]);
+            setFileUrls((prevUrls) => [...prevUrls, ...urls]);
 
-            console.log("Imagen cargada:", file.name);
-            console.log("URL de descarga:", fileUrl);
+            // Usar las imágenes y las URL directamente después de la actualización del estado
+            console.log('images upload:', [...images, ...files]);
+            console.log('images url opload:', [...fileUrls, ...urls]);
         } catch (error) {
-            console.error("Error al cargar la imagen:", error.message);
+            console.error('Error al manejar cambios en las imágenes:', error.message);
         }
     };
 
@@ -52,6 +48,7 @@ function HomesForm() {
 
 
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
+            const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
             const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
             console.log(data)
             await airtableBase('homes').create([
@@ -73,7 +70,7 @@ function HomesForm() {
                         "Home Status": data.homeStatus,
                         "Is Furnished": data.isFurnished,
                         "Tourist License": data.touristLicense,
-                        "URL Images": fileUrl,
+                        "URL Images": imagesString,
                         "Video": data.video,
                         "Matterport": data.matterport,
                         "Plots": plotsString,
