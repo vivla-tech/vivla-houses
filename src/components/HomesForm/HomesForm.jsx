@@ -10,11 +10,14 @@ function HomesForm() {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        watch
     } = useForm();
 
     const [images, setImages] = useState([]);
     const [fileUrls, setFileUrls] = useState([]);
+
+    const homeName = watch('homeName', '');
 
     const handleChange = async (e) => {
         try {
@@ -22,7 +25,7 @@ function HomesForm() {
 
             // Crear una referencia al storage para cada imagen y cargarla
             const urls = await Promise.all(files.map(async (file) => {
-                const storageRef = ref(storage, `images/${file.name}`);
+                const storageRef = ref(storage, `images/${homeName}/${file.name}`);
                 await uploadBytes(storageRef, file);
                 return getDownloadURL(storageRef);
             }));
@@ -95,13 +98,14 @@ function HomesForm() {
 
                 <form
                     className='homes-form'
-                    onSubmit={handleSubmit(handleFormSubmit)}>
+                    onSubmit={handleSubmit((data) => handleFormSubmit(data, homeName))}>
 
                     <div>
                         <label htmlFor="home">
                             Home name *
                         </label>
                         <input
+                            onInput={(e) => handleChange(e, homeName)}
                             placeholder='Saona, Ribes...'
                             id="home"
                             type="text"
@@ -338,7 +342,7 @@ function HomesForm() {
                             Add images *
                         </label>
                         <input
-                            onInput={handleChange}
+                            onInput={(e) => handleChange(e, register('homeName').value)}
                             id="images"
                             type="file"
                             {...register('images',
