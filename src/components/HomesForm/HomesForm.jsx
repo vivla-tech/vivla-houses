@@ -41,14 +41,10 @@ function HomesForm() {
     };
 
 
-
-
-
     const handleFormSubmit = async (data) => {
         try {
 
             const { plots, amenities } = data;
-
 
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
             const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
@@ -90,6 +86,17 @@ function HomesForm() {
             console.error('error submit form', error)
         }
     }
+
+    const handleRemoveImage = (index) => {
+        const updatedImages = [...images];
+        const updatedFileUrls = [...fileUrls];
+
+        updatedImages.splice(index, 1);
+        updatedFileUrls.splice(index, 1);
+
+        setImages(updatedImages);
+        setFileUrls(updatedFileUrls);
+    };
 
     return (
         <>
@@ -355,7 +362,7 @@ function HomesForm() {
                     {errors.images && <p>{errors.images.message}</p>}
 
                     {images.length > 0
-                        ? <ImagePicker imageFile={images} />
+                        ? <ImagePicker imageFile={images} onRemoveImage={handleRemoveImage} />
                         : null
                     }
 
