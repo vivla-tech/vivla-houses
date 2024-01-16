@@ -1,22 +1,14 @@
-import { useEffect, useState } from "react";
-import { getHomesData } from "../services/airtableServices";
+import useHomes from "../../hooks/useHomes";
 
 function Homes() {
-  const [homes, setHomes] = useState([]);
-
-  useEffect(() => {
-    getHomesData()
-      .then(data => {
-        console.log(data);
-        setHomes(data);
-      })
-      .catch(e => console.error(e));
-  }, [])
+  const homes = useHomes()
 
   return (
     <>
-      {homes.map((mapHomes) => (
-        <p key={mapHomes.id}>{mapHomes.fields["Home Name"]}</p>
+      {homes?.map((mapHomes) => (
+        <p key={mapHomes.id}>
+          {mapHomes.fields["Home Name"]}
+        </p>
       ))}
     </>
   )
