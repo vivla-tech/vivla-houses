@@ -7,7 +7,7 @@ function Homes() {
     <>
       {homes?.map((mapHomes) => (
         <p key={mapHomes.id}>
-          {mapHomes.fields["Home Name"]}
+          {mapHomes.homeName}
         </p>
       ))}
     </>

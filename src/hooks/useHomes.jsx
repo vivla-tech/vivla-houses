@@ -6,13 +6,50 @@ function useHomes() {
     const [homes, setHomes] = useState([]);
 
     useEffect(() => {
-        getHomesData()
-            .then(data => {
-                console.log(data);
-                setHomes(data);
-            })
-            .catch(e => console.error(e));
+        const fetchData = async () => {
+            try {
+                const data = await getHomesData();
+                const transformedData = transformHomeData(data);
+                setHomes(transformedData);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
     }, []);
+
+    const transformHomeData = (data) => {
+        return data.map(item => {
+            return {
+                id: item.id,
+                homeName: item.fields['Home Name'],
+                hub: item.fields['Hub'],
+                market: item.fields['Market'],
+                address: item.fields['Address'],
+                coordinates: item.fields['Coordinates'],
+                price: item.fields['Price'],
+                bedrooms: item.fields["Bedrooms"],
+                bathrooms: item.fields["Bathrooms"],
+                homeSQM: item.fields["Home SQM"],
+                plotSQM: item.fields["Plot SQM"],
+                homeCollection: item.fields["Home Collection"],
+                homeTypes: item.fields["Home Types"],
+                homeSubtype: item.fields["Home Subtype"],
+                homeStatus: item.fields["Home Status"],
+                isFurnished: item.fields["Is Furnished"],
+                touristLicense: item.fields["Tourist License"],
+                UrlImages: item.fields["URL Images"],
+                video: item.fields["Video"],
+                matterport: item.fields["Matterport"],
+                plots: item.fields["Plots"],
+                description: item.fields["Description"],
+                amenities: item.fields["Amenities"],
+                visibility: item.fields["Visibility"],
+                internalNotes: item.fields["Internal Notes"],
+            }
+        })
+    }
 
     return homes;
 }

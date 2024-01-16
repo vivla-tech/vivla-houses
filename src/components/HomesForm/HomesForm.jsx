@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import './homes-form.css';
-import { airtableBase } from '../services/airtableServices';
+import { airtableBase } from '../../services/airtableServices';
 import { storage } from '../../firebase/config/firebase';
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import ImagePicker from '../ImagePicker/ImagePicker';
