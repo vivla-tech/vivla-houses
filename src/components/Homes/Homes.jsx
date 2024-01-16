@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
-import { airtableBase } from "../services/airtableServices";
+import { getHomesData } from "../services/airtableServices";
 
 function Homes() {
   const [homes, setHomes] = useState([]);
 
   useEffect(() => {
-    airtableBase('homes')
-      .select({ view: 'Grid view' })
-      .all()
+    getHomesData()
       .then(data => {
-        console.log(data)
-        setHomes(data)
-
+        console.log(data);
+        setHomes(data);
       })
-      .catch(e => console.error(e))
+      .catch(e => console.error(e));
   }, [])
 
   return (
     <>
-      {homes.map((index, mapHomes) => (
-        <p key={mapHomes[index]}>{mapHomes[index]}</p>
+      {homes.map((mapHomes) => (
+        <p key={mapHomes.id}>{mapHomes.fields["Home Name"]}</p>
       ))}
     </>
   )

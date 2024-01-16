@@ -8,7 +8,16 @@ export const airtableBase = new Airtable({
     .base(VITE_AIRTABLE_BASE)
 
 
-
+export const getHomesData = async () => {
+    try {
+        const data = await airtableBase('homes')
+            .select({ view: 'Grid view' })
+            .all();
+        return data;
+    } catch (e) {
+        return console.error(e);
+    }
+}
 
 
 
