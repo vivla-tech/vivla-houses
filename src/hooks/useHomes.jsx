@@ -39,7 +39,7 @@ function useHomes() {
                 homeStatus: item.fields["Home Status"],
                 isFurnished: item.fields["Is Furnished"],
                 touristLicense: item.fields["Tourist License"],
-                UrlImages: item.fields["URL Images"],
+                urlImages: item.fields["URL Images"],
                 video: item.fields["Video"],
                 matterport: item.fields["Matterport"],
                 plots: item.fields["Plots"],
