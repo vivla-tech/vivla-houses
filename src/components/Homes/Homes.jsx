@@ -4,13 +4,13 @@ import './homes.css';
 function Homes() {
   const homes = useHomes()
 
-  // console.log(homes)
+  console.log(homes)
   return (
     <>
       {homes?.map((mapHomes) => (
         <section className="home-list"
           key={mapHomes.id}>
-          <div>
+          <div className="home-head">
             <h2 className="home-name">
               {mapHomes.homeName} - 150.000€
             </h2>
@@ -19,18 +19,24 @@ function Homes() {
           <div className="home-info">
             <ul className="home-details">
               <li>
-                <p>{mapHomes.hub}</p>
+                <p>Nº Bathrooms: {mapHomes.bathrooms}</p>
               </li>
               <li>
-                <p>{mapHomes.market}</p>
+                <p>Nº Bedrooms: {mapHomes.bedrooms}</p>
               </li>
               <li>
-                <p>{mapHomes.address}</p>
+                <p>Address: {mapHomes.address}</p>
               </li>
               <li>
-                <p>{mapHomes.coordinates}</p>
+                <p> Furnished: {mapHomes.isFurnished ? 'yes' : 'no'}</p>
+              </li>
+              <li>
+                <p> Amenities: {mapHomes.amenities}</p>
               </li>
             </ul>
+            <button>Edit</button>
+            <button>Delete</button>
+            <button>Open in VIVLA </button>
           </div>
         </section>
       ))}
