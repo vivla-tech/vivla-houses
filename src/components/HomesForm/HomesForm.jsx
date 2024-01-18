@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import './homes-form.css';
 import { airtableBase } from '../../services/airtableServices';
-import { storage } from '../../firebase/config/firebase';
-import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import ImagePicker from '../ImagePicker/ImagePicker';
+import { uploadFiletoStorage } from '../../firebase/storage';
+import './homes-form.css';
 
 function HomesForm() {
     const {
@@ -24,11 +23,7 @@ function HomesForm() {
             const files = Array.from(e.target.files);
 
             // Crear una referencia al storage para cada imagen y cargarla
-            const urls = await Promise.all(files.map(async (file) => {
-                const storageRef = ref(storage, `images/${homeName}/${file.name}`);
-                await uploadBytes(storageRef, file);
-                return getDownloadURL(storageRef);
-            }));
+            const urls = await uploadFiletoStorage(files, homeName);
 
             setImages((prevImages) => [...prevImages, ...files]);
             setFileUrls((prevUrls) => [...prevUrls, ...urls]);

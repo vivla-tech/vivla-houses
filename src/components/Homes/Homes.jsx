@@ -1,5 +1,4 @@
 import useHomes from "../../hooks/useHomes";
-import { removeHomesData } from "../../services/airtableServices";
 import './homes.css';
 
 function Homes() {
