@@ -1,8 +1,9 @@
 import useHomes from "../../hooks/useHomes";
+import { removeHomesData } from "../../services/airtableServices";
 import './homes.css';
 
 function Homes() {
-  const homes = useHomes()
+  const { homes, removeHome } = useHomes()
 
   console.log(homes)
   return (
@@ -12,7 +13,7 @@ function Homes() {
           key={mapHomes.id}>
           <div className="home-head">
             <h2 className="home-name">
-              {mapHomes.homeName} - 150.000€
+              {mapHomes.homeName} - {mapHomes.price}€
             </h2>
             <img src={mapHomes.urlImages} alt={`${mapHomes.homeName} home`} />
           </div>
@@ -35,7 +36,7 @@ function Homes() {
               </li>
             </ul>
             <button>Edit</button>
-            <button>Delete</button>
+            <button onClick={() => removeHome(mapHomes.id)}>Delete</button>
             <button>Open in VIVLA </button>
           </div>
         </section>

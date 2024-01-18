@@ -19,6 +19,14 @@ export const getHomesData = async () => {
     }
 }
 
+export const removeHomesData = async (id) => {
+    try {
+        await airtableBase('homes').destroy([id])
+    } catch (error) {
+        console.error('error to remove home data', error)
+    }
+}
+
 
 
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getHomesData } from "../services/airtableServices";
+import { getHomesData, removeHomesData } from "../services/airtableServices";
 
 
 function useHomes() {
@@ -18,6 +18,11 @@ function useHomes() {
 
         fetchData();
     }, []);
+
+    const removeHome = async (id) => {
+        await removeHomesData(id)
+        setHomes(prevHome => prevHome.filter(home => home.id !== id))
+    }
 
     const transformHomeData = (data) => {
         return data.map(item => {
@@ -51,7 +56,7 @@ function useHomes() {
         })
     }
 
-    return homes;
+    return { homes, removeHome }
 }
 
 export default useHomes;
