@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getHomesData, removeHomesData } from "../services/airtableServices";
+import { removeImageFromStorage } from "../firebase/storage";
 
 
 function useHomes() {
@@ -21,6 +22,7 @@ function useHomes() {
 
     const removeHome = async (id) => {
         await removeHomesData(id)
+        await removeImageFromStorage(homes[0].homeName)
         setHomes(prevHome => prevHome.filter(home => home.id !== id))
     }
 

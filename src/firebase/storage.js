@@ -1,5 +1,5 @@
 import { storage } from "./config/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, deleteObject, list } from "firebase/storage";
 
 export const uploadFiletoStorage = async (files, homeName) => {
     return Promise.all(files.map(async (file) => {
@@ -8,4 +8,22 @@ export const uploadFiletoStorage = async (files, homeName) => {
         return getDownloadURL(storageRef);
     }));
 }
+
+export const removeImageFromStorage = async (folderPath) => {
+    try {
+        const folderRef = ref(storage, `images/${folderPath}/`);
+
+        const folderContents = await list(folderRef);
+
+        await Promise.all(folderContents.items.map(async (item) => {
+            await deleteObject(ref(storage, item.fullPath));
+        }));
+
+        await deleteObject(folderRef);
+
+        console.log('Remove image correctly');
+    } catch (error) {
+        console.error('Error to remove image from Storage', error);
+    }
+};
 
