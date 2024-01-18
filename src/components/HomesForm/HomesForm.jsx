@@ -1,31 +1,29 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import './homes-form.css';
-import { airtableBase } from '../services/airtableServices';
-import { storage } from '../../firebase/config/firebase';
-import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import { airtableBase } from '../../services/airtableServices';
 import ImagePicker from '../ImagePicker/ImagePicker';
+import { uploadFiletoStorage } from '../../firebase/storage';
+import './homes-form.css';
 
 function HomesForm() {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        watch
     } = useForm();
 
     const [images, setImages] = useState([]);
     const [fileUrls, setFileUrls] = useState([]);
+
+    const homeName = watch('homeName', '');
 
     const handleChange = async (e) => {
         try {
             const files = Array.from(e.target.files);
 
             // Crear una referencia al storage para cada imagen y cargarla
-            const urls = await Promise.all(files.map(async (file) => {
-                const storageRef = ref(storage, `images/${file.name}`);
-                await uploadBytes(storageRef, file);
-                return getDownloadURL(storageRef);
-            }));
+            const urls = await uploadFiletoStorage(files, homeName);
 
             setImages((prevImages) => [...prevImages, ...files]);
             setFileUrls((prevUrls) => [...prevUrls, ...urls]);
@@ -38,14 +36,10 @@ function HomesForm() {
     };
 
 
-
-
-
     const handleFormSubmit = async (data) => {
         try {
 
             const { plots, amenities } = data;
-
 
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
             const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
@@ -88,6 +82,17 @@ function HomesForm() {
         }
     }
 
+    const handleRemoveImage = (index) => {
+        const updatedImages = [...images];
+        const updatedFileUrls = [...fileUrls];
+
+        updatedImages.splice(index, 1);
+        updatedFileUrls.splice(index, 1);
+
+        setImages(updatedImages);
+        setFileUrls(updatedFileUrls);
+    };
+
     return (
         <>
             <h2 className='title'>Add a new VIVLA home &#128516; </h2>
@@ -95,13 +100,14 @@ function HomesForm() {
 
                 <form
                     className='homes-form'
-                    onSubmit={handleSubmit(handleFormSubmit)}>
+                    onSubmit={handleSubmit((data) => handleFormSubmit(data, homeName))}>
 
                     <div>
                         <label htmlFor="home">
                             Home name *
                         </label>
                         <input
+                            onInput={(e) => handleChange(e, homeName)}
                             placeholder='Saona, Ribes...'
                             id="home"
                             type="text"
@@ -338,7 +344,7 @@ function HomesForm() {
                             Add images *
                         </label>
                         <input
-                            onInput={handleChange}
+                            onInput={(e) => handleChange(e, register('homeName').value)}
                             id="images"
                             type="file"
                             {...register('images',
@@ -351,7 +357,7 @@ function HomesForm() {
                     {errors.images && <p>{errors.images.message}</p>}
 
                     {images.length > 0
-                        ? <ImagePicker imageFile={images} />
+                        ? <ImagePicker imageFile={images} onRemoveImage={handleRemoveImage} />
                         : null
                     }
 

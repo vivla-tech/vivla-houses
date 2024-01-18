@@ -1,25 +1,44 @@
-import { useEffect, useState } from "react";
-import { airtableBase } from "../services/airtableServices";
+import useHomes from "../../hooks/useHomes";
+import './homes.css';
 
 function Homes() {
-  const [homes, setHomes] = useState([]);
+  const { homes, removeHome } = useHomes()
 
-  useEffect(() => {
-    airtableBase('homes')
-      .select({ view: 'Grid view' })
-      .all()
-      .then(data => {
-        console.log(data)
-        setHomes(data)
-
-      })
-      .catch(e => console.error(e))
-  }, [])
-
+  console.log(homes)
   return (
     <>
-      {homes.map((index, mapHomes) => (
-        <p key={mapHomes[index]}>{mapHomes[index]}</p>
+      {homes?.map((mapHomes) => (
+        <section className="home-list"
+          key={mapHomes.id}>
+          <div className="home-head">
+            <h2 className="home-name">
+              {mapHomes.homeName} - {mapHomes.price}€
+            </h2>
+            <img src={mapHomes.urlImages} alt={`${mapHomes.homeName} home`} />
+          </div>
+          <div className="home-info">
+            <ul className="home-details">
+              <li>
+                <p>Nº Bathrooms: {mapHomes.bathrooms}</p>
+              </li>
+              <li>
+                <p>Nº Bedrooms: {mapHomes.bedrooms}</p>
+              </li>
+              <li>
+                <p>Address: {mapHomes.address}</p>
+              </li>
+              <li>
+                <p> Furnished: {mapHomes.isFurnished ? 'yes' : 'no'}</p>
+              </li>
+              <li>
+                <p> Amenities: {mapHomes.amenities}</p>
+              </li>
+            </ul>
+            <button>Edit</button>
+            <button onClick={() => removeHome(mapHomes.id)}>Delete</button>
+            <button>Open in VIVLA </button>
+          </div>
+        </section>
       ))}
     </>
   )

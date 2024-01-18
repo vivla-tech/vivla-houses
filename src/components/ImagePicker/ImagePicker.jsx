@@ -1,13 +1,18 @@
 import './image-picker.css';
 
-function ImagePicker({ imageFile }) {
+function ImagePicker({ imageFile, onRemoveImage }) {
     return (
         <section className='img-container'>
-            {imageFile?.map((image) => (
-                <div key={image.name}>
-                    <img src={URL.createObjectURL(image)} alt={`Preview ${image.name}`} />
-                    <p className='file-name'>{image.name}</p>
-                </div>
+            {imageFile?.map((image, index) => (
+                <>
+                    <div key={image.name}>
+                        <img src={URL.createObjectURL(image)} alt={`Preview ${image.name}`} />
+                        <p className='file-name'>{image.name}</p>
+                    </div>
+                    <button type='button' onClick={() => onRemoveImage(index)}>
+                        Remove
+                    </button>
+                </>
             ))}
         </section>
     )
