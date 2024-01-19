@@ -18,8 +18,6 @@ export const removeImageFromImagePicker = async (filePath, fileName) => {
         console.error('Error delete image from imagePicker', error)
     }
 
-
-
 }
 
 export const removeImageFromStorage = async (folderPath) => {
@@ -28,9 +26,9 @@ export const removeImageFromStorage = async (folderPath) => {
 
         const folderContents = await list(folderRef);
 
-        await Promise.all(folderContents.items.map(async (item) => {
+        for (const item of folderContents.items) {
             await deleteObject(ref(storage, item.fullPath));
-        }));
+        }
 
         await deleteObject(folderRef);
 
