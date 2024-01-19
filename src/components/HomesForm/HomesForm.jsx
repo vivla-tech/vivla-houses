@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { airtableBase } from '../../services/airtableServices';
 import ImagePicker from '../ImagePicker/ImagePicker';
-import { uploadFiletoStorage } from '../../firebase/storage';
+import { removeImageFromImagePicker, uploadFiletoStorage } from '../../firebase/storage';
 import './homes-form.css';
 
 function HomesForm() {
@@ -22,7 +22,8 @@ function HomesForm() {
         try {
             const files = Array.from(e.target.files);
 
-            // Crear una referencia al storage para cada imagen y cargarla
+            // cargar los archivos en storage
+            // dentro de una carpeta con el nombre de la casa
             const urls = await uploadFiletoStorage(files, homeName);
 
             setImages((prevImages) => [...prevImages, ...files]);
@@ -82,9 +83,11 @@ function HomesForm() {
         }
     }
 
-    const handleRemoveImage = (index) => {
+    const handleRemoveImage = async (index, fileName) => {
         const updatedImages = [...images];
         const updatedFileUrls = [...fileUrls];
+
+        await removeImageFromImagePicker(homeName, fileName)
 
         updatedImages.splice(index, 1);
         updatedFileUrls.splice(index, 1);
