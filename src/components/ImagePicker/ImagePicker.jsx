@@ -9,7 +9,7 @@ function ImagePicker({ imageFile, onRemoveImage }) {
                         <img src={URL.createObjectURL(image)} alt={`Preview ${image.name}`} />
                         <p className='file-name'>{image.name}</p>
                     </div>
-                    <button type='button' onClick={() => onRemoveImage(index)}>
+                    <button type='button' onClick={() => onRemoveImage(index, image.name)}>
                         Remove
                     </button>
                 </>

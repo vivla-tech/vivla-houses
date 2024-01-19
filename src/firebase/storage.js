@@ -9,6 +9,19 @@ export const uploadFiletoStorage = async (files, homeName) => {
     }));
 }
 
+export const removeImageFromImagePicker = async (filePath, fileName) => {
+    try {
+        const fileRef = ref(storage, `images/${filePath}/${fileName}`);
+        await deleteObject(fileRef)
+        console.log('sucess delete image from storage', fileRef)
+    } catch (error) {
+        console.error('Error delete image from imagePicker', error)
+    }
+
+
+
+}
+
 export const removeImageFromStorage = async (folderPath) => {
     try {
         const folderRef = ref(storage, `images/${folderPath}/`);
