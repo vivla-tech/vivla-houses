@@ -1,10 +1,15 @@
+import { useState } from "react";
 import useHomes from "../../hooks/useHomes";
 import './homes.css';
+import EditModal from "../EditModal/EditModal";
 
 function Homes() {
   const { homes, removeHome } = useHomes()
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log(homes)
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <>
       {homes?.map((mapHomes) => (
@@ -34,7 +39,8 @@ function Homes() {
                 <p> Amenities: {mapHomes.amenities}</p>
               </li>
             </ul>
-            <button>Edit</button>
+            <button onClick={openModal}>Edit</button>
+            {isModalOpen && <EditModal isOpen={openModal} isClose={closeModal} />}
             <button onClick={() => removeHome(mapHomes.id)}>Delete</button>
             <button>Open in VIVLA </button>
           </div>
