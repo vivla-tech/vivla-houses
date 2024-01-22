@@ -1,21 +1,29 @@
 import { useForm } from "react-hook-form";
 import ImagePicker from "../ImagePicker/ImagePicker";
 import '../../components/HomesForm/homes-form.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
-function EditModal({ isOpen, isClose }) {
+function EditModal({ isOpen, isClose, currentHome }) {
     const {
         register,
         handleSubmit,
         formState: { errors },
         watch,
+        reset
     } = useForm();
 
     const [images, setImages] = useState([]);
     const [fileUrls, setFileUrls] = useState([]);
 
+    useEffect(() => {
+        if (currentHome) {
+            reset(currentHome)
+        }
+    }, [currentHome, reset])
+
     if (!isOpen) return null;
+
 
     return (
         <>

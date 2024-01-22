@@ -6,8 +6,13 @@ import EditModal from "../EditModal/EditModal";
 function Homes() {
   const { homes, removeHome } = useHomes()
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentHome, setCurrentHome] = useState(null);
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = (homeData) => {
+    setCurrentHome(homeData);
+    setIsModalOpen(true);
+  }
+
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -39,8 +44,13 @@ function Homes() {
                 <p> Amenities: {mapHomes.amenities}</p>
               </li>
             </ul>
-            <button onClick={openModal}>Edit</button>
-            {isModalOpen && <EditModal isOpen={openModal} isClose={closeModal} />}
+            <button onClick={() => openModal(mapHomes)}>Edit</button>
+            {isModalOpen &&
+              <EditModal
+                isOpen={openModal}
+                isClose={closeModal}
+                currentHome={currentHome}
+              />}
             <button onClick={() => removeHome(mapHomes.id)}>Delete</button>
             <button>Open in VIVLA </button>
           </div>
