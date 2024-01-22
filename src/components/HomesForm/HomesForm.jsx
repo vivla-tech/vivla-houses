@@ -10,7 +10,8 @@ function HomesForm() {
         register,
         handleSubmit,
         formState: { errors },
-        watch
+        watch,
+        reset
     } = useForm();
 
     const [images, setImages] = useState([]);
@@ -77,6 +78,8 @@ function HomesForm() {
                 }
             ])
             console.log('submit correctly', data)
+            reset();
+            setImages([]);
 
         } catch (error) {
             console.error('error submit form', error)
