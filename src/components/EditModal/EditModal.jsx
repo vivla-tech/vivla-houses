@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import ImagePicker from "../ImagePicker/ImagePicker";
-import '../../components/HomesForm/homes-form.css';
 import { useEffect, useState } from "react";
+import '../../components/HomesForm/homes-form.css';
 
 
 function EditModal({ isOpen, isClose, currentHome }) {
@@ -10,17 +10,41 @@ function EditModal({ isOpen, isClose, currentHome }) {
         handleSubmit,
         formState: { errors },
         watch,
-        reset
+        reset,
+        setValue
     } = useForm();
-
     const [images, setImages] = useState([]);
     const [fileUrls, setFileUrls] = useState([]);
+    const [isEdit, setIsEdit] = useState(true)
+
+    const homeName = watch('homeName', '');
+
+    const arrayImages = currentHome.urlImages.split(',');
+
+
+    console.log(currentHome)
+    console.log(arrayImages)
 
     useEffect(() => {
         if (currentHome) {
+            setImages(arrayImages);
+            setValue('images', arrayImages);
             reset(currentHome)
         }
-    }, [currentHome, reset])
+    }, [currentHome, reset, setValue]);
+
+    const removeImageFromEditModal = async (index, fileName) => {
+        const updatedImages = [...images];
+        const updatedFileUrls = [...fileUrls];
+
+        await removeImageFromImagePicker(homeName, fileName)
+
+        updatedImages.splice(index, 1);
+        updatedFileUrls.splice(index, 1);
+
+        setImages(updatedImages);
+        setFileUrls(updatedFileUrls);
+    };
 
     if (!isOpen) return null;
 
@@ -288,7 +312,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
                     {errors.images && <p>{errors.images.message}</p>}
 
                     {images.length > 0
-                        ? <ImagePicker imageFile={images} onRemoveImage={handleRemoveImage} />
+                        ? <ImagePicker imageFile={images} onRemoveImage={isEdit ? removeImageFromEditModal : handleRemoveImage} />
                         : null
                     }
 
