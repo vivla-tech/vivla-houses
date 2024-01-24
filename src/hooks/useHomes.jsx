@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getHomesData, removeHomesData } from "../services/airtableServices";
+import { getHomesData, removeHomesData, updateHomeData } from "../services/airtableServices";
 import { removeImageFromStorage } from "../firebase/storage";
 
 
@@ -26,6 +26,33 @@ function useHomes() {
         await removeHomesData(id)
         await removeImageFromStorage(homeToDelete.homeName)
         setHomes(prevHome => prevHome.filter(home => home.id !== id))
+    }
+
+    const updateHome = async (id, updatedFields, newFiles) => {
+        try {
+            const homeToUpdate = homes.find(home => home.id === id);
+
+            if (newFiles && newFiles.length > 0) {
+                const homeName = updatedFields.homeName || homeToUpdate.homeName;
+                const newImageUrls = await updateImagesInStorage(homeName, newFiles);
+
+                updatedFields = { ...updatedFields, urlImages: newImageUrls.join(', ') };
+            }
+
+            const updatedRecord = await updateHomeData(id, updatedFields);
+
+            setHomes(prevHomes =>
+                prevHomes.map(home => home.id === id
+                    ? { ...home, ...updatedFields }
+                    : home
+                )
+            );
+
+            return updatedRecord;
+
+        } catch (error) {
+            console.error('Error updating home data:', error);
+        }
     }
 
     const transformHomeData = (data) => {
@@ -60,7 +87,7 @@ function useHomes() {
         })
     }
 
-    return { homes, removeHome }
+    return { homes, removeHome, updateHome }
 }
 
 export default useHomes;

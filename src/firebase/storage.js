@@ -43,3 +43,18 @@ export const removeImageFromStorage = async (folderPath) => {
     }
 };
 
+export const updateImagesInStorage = async (homeName, newFiles) => {
+    try {
+        const formattedHomeName = homeName.replace(/\s+/g, '-');
+
+        await removeImageFromStorage(formattedHomeName);
+
+        const newImageUrls = await uploadFiletoStorage(newFiles, formattedHomeName);
+
+        return newImageUrls;
+
+    } catch (error) {
+        console.error('Error updating images in storage:', error);
+    }
+}
+
