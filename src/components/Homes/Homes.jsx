@@ -45,17 +45,18 @@ function Homes() {
               </li>
             </ul>
             <button onClick={() => openModal(mapHomes)}>Edit</button>
-            {isModalOpen &&
-              <EditModal
-                isOpen={openModal}
-                isClose={closeModal}
-                currentHome={currentHome}
-              />}
             <button onClick={() => removeHome(mapHomes.id)}>Delete</button>
             <button>Open in VIVLA </button>
           </div>
         </section>
       ))}
+
+      {isModalOpen &&
+        <EditModal
+          isOpen={openModal}
+          isClose={closeModal}
+          currentHome={currentHome}
+        />}
     </>
   )
 }
