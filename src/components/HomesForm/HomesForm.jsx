@@ -80,6 +80,8 @@ function HomesForm() {
             console.log('submit correctly', data)
             reset();
             setImages([]);
+            setFileUrls([]);
+            document.getElementById('images').value = '';
 
         } catch (error) {
             console.error('error submit form', error)
