@@ -2,8 +2,12 @@ import { storage } from "./config/firebase";
 import { ref, uploadBytes, getDownloadURL, deleteObject, list } from "firebase/storage";
 
 export const uploadFiletoStorage = async (files, homeName) => {
+
+    //reemplaza los espacios por guiones para evitar problemas en storage
+    const formattedHomeName = homeName.replace(/\s+/g, '-');
+
     return Promise.all(files.map(async (file) => {
-        const storageRef = ref(storage, `images/${homeName}/${file.name}`);
+        const storageRef = ref(storage, `images/${formattedHomeName}/${file.name}`);
         await uploadBytes(storageRef, file);
         return getDownloadURL(storageRef);
     }));
@@ -22,7 +26,8 @@ export const removeImageFromImagePicker = async (filePath, fileName) => {
 
 export const removeImageFromStorage = async (folderPath) => {
     try {
-        const folderRef = ref(storage, `images/${folderPath}/`);
+        const formattedFolderPath = folderPath.replace(/\s+/g, '-');
+        const folderRef = ref(storage, `images/${formattedFolderPath}/`);
 
         const folderContents = await list(folderRef);
 
@@ -37,4 +42,19 @@ export const removeImageFromStorage = async (folderPath) => {
         console.error('Error to remove image from Storage', error);
     }
 };
+
+export const updateImagesInStorage = async (homeName, newFiles) => {
+    try {
+        const formattedHomeName = homeName.replace(/\s+/g, '-');
+
+        await removeImageFromStorage(formattedHomeName);
+
+        const newImageUrls = await uploadFiletoStorage(newFiles, formattedHomeName);
+
+        return newImageUrls;
+
+    } catch (error) {
+        console.error('Error updating images in storage:', error);
+    }
+}
 

@@ -1,121 +1,108 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { airtableBase } from '../../services/airtableServices';
-import ImagePicker from '../ImagePicker/ImagePicker';
-import { removeImageFromImagePicker, uploadFiletoStorage } from '../../firebase/storage';
-import './homes-form.css';
+import { useForm } from "react-hook-form";
+import ImagePicker from "../ImagePicker/ImagePicker";
+import { useEffect, useState } from "react";
+import '../../components/HomesForm/homes-form.css';
+import useHomes from "../../hooks/useHomes";
+import { updateImagesInStorage } from "../../firebase/storage";
 
-function HomesForm() {
+
+function EditModal({ isOpen, isClose, currentHome }) {
     const {
         register,
         handleSubmit,
         formState: { errors },
-        watch,
-        reset
+        // watch,
+        reset,
+        setValue
     } = useForm();
+    // const [images, setImages] = useState([]);
+    // const [fileUrls, setFileUrls] = useState([]);
+    const [existingImages, setExistingImages] = useState([]);
+    const [newFiles, setNewFiles] = useState([]);
+    const [selectedAmenities, setSelectedAmenities] = useState([]);
+    const [isEdit, setIsEdit] = useState(true);
+    const { updateHome } = useHomes()
 
-    const [images, setImages] = useState([]);
-    const [fileUrls, setFileUrls] = useState([]);
+    // const homeName = watch('homeName', '');
 
-    const homeName = watch('homeName', '');
+    // const arrayImages = currentHome.urlImages.split(',');
 
-    const handleChange = async (e) => {
-        try {
-            const files = Array.from(e.target.files);
 
-            // cargar los archivos en storage
-            // dentro de una carpeta con el nombre de la casa
-            const urls = await uploadFiletoStorage(files, homeName);
+    // console.log(currentHome)
+    // console.log(arrayImages)
 
-            setImages((prevImages) => [...prevImages, ...files]);
-            setFileUrls((prevUrls) => [...prevUrls, ...urls]);
 
-            console.log('images upload:', [...images, ...files]);
-            console.log('images url upload:', [...fileUrls, ...urls]);
-        } catch (error) {
-            console.error('Error al manejar cambios en las imágenes:', error.message);
+
+    useEffect(() => {
+        if (currentHome) {
+            setExistingImages(currentHome.urlImages.split(','));
+            setSelectedAmenities(currentHome.amenities ? currentHome.amenities.split(',') : []);
+            setValue('urlImages', existingImages);
+            setValue('amenities', selectedAmenities)
+            reset(currentHome);
         }
+    }, [currentHome, reset]);
+
+    const handleImageChange = (e) => {
+        setNewFiles(Array.from(e.target.files));
+
     };
 
+    const handleAmenitiesChange = () => {
+        const selectedOptions = Array.from(e.target.SelectedOptions, (option) => option.value)
+        setSelectedAmenities(selectedOptions);
+    }
+
+    const handleRemoveExistingImage = (imageToRemove) => {
+        setExistingImages(existingImages.filter(image => image !== imageToRemove));
+    };
 
     const handleFormSubmit = async (data) => {
         try {
 
-            const { plots, amenities } = data;
-
-            const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
-            const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
-            const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
+            const updateData = {
+                ...data,
+                amenities: selectedAmenities.join(', ')
+            }
+            await updateHome(currentHome.id, updateData, newFiles, existingImages);
             console.log(data)
-            await airtableBase('homes').create([
-                {
-                    fields: {
-                        homeName: data.homeName,
-                        hub: data.hub,
-                        market: data.market,
-                        address: data.address,
-                        coordinates: data.coordinates,
-                        price: data.price,
-                        bedrooms: data.bedrooms,
-                        bathrooms: data.bathrooms,
-                        homeSQM: data.homeSQM,
-                        plotSQM: data.plotSQM,
-                        homeCollection: data.homeCollection,
-                        homeTypes: data.homeTypes,
-                        homeSubtype: data.homeSubtype,
-                        homeStatus: data.homeStatus,
-                        isFurnished: data.isFurnished,
-                        touristLicense: data.touristLicense,
-                        urlImages: imagesString,
-                        video: data.video,
-                        matterport: data.matterport,
-                        plots: plotsString,
-                        description: data.description,
-                        amenities: amenitiesString,
-                        visibility: data.visibility,
-                        internalNotes: data.internalNotes,
-                    }
-                }
-            ])
-            console.log('submit correctly', data)
-            reset();
-            setImages([]);
-            setFileUrls([]);
-            document.getElementById('urlImages').value = '';
+            isClose();
 
         } catch (error) {
-            console.error('error submit form', error)
+            console.error('Error updating home:', error);
         }
-    }
-
-    const handleRemoveImage = async (index, fileName) => {
-        const updatedImages = [...images];
-        const updatedFileUrls = [...fileUrls];
-
-        await removeImageFromImagePicker(homeName, fileName)
-
-        updatedImages.splice(index, 1);
-        updatedFileUrls.splice(index, 1);
-
-        setImages(updatedImages);
-        setFileUrls(updatedFileUrls);
     };
+
+    // const removeImageFromEditModal = async (index, fileName) => {
+    //     const updatedImages = [...images];
+    //     const updatedFileUrls = [...fileUrls];
+
+    //     await removeImageFromImagePicker(homeName, fileName)
+
+    //     updatedImages.splice(index, 1);
+    //     updatedFileUrls.splice(index, 1);
+
+    //     setImages(updatedImages);
+    //     setFileUrls(updatedFileUrls);
+    // };
+
+    if (!isOpen) return null;
+
 
     return (
         <>
-            <h2 className='title'>Add a new VIVLA home &#128516; </h2>
-            <section className='form-container'>
+            <section className='form-container modal'>
 
                 <form
-                    className='homes-form'
-                    onSubmit={handleSubmit((data) => handleFormSubmit(data, homeName))}>
+                    className='homes-form modal-content'
+                    onSubmit={handleSubmit(handleFormSubmit)}>
 
                     <div>
                         <label htmlFor="home">
                             Home name *
                         </label>
                         <input
-                            onInput={(e) => handleChange(e, homeName)}
+                            // onInput={(e) => handleChange(e, homeName)}
                             placeholder='Saona, Ribes...'
                             id="home"
                             type="text"
@@ -352,10 +339,10 @@ function HomesForm() {
                             Add images *
                         </label>
                         <input
-                            onInput={(e) => handleChange(e, register('homeName').value)}
+                            onChange={handleImageChange}
                             id="urlImages"
                             type="file"
-                            {...register('images',
+                            {...register('urlImages',
                                 {
                                     required: '❌ Images are required',
                                 })}
@@ -364,8 +351,10 @@ function HomesForm() {
                     </div>
                     {errors.images && <p>{errors.images.message}</p>}
 
-                    {images.length > 0
-                        ? <ImagePicker imageFile={images} onRemoveImage={handleRemoveImage} />
+                    {newFiles.length > 0
+                        ? <ImagePicker
+                            imageFile={isEdit ? newFiles : images}
+                            onRemoveImage={isEdit ? handleRemoveExistingImage : handleRemoveImage} />
                         : null
                     }
 
@@ -424,6 +413,8 @@ function HomesForm() {
                             Amenities (At least three) *
                         </label>
                         <select
+                            onChange={handleAmenitiesChange}
+                            value={selectedAmenities}
                             id="amenities"
                             multiple
                             {...register('amenities',
@@ -469,11 +460,12 @@ function HomesForm() {
                     </div>
 
 
-                    <button type="submit"> Submit </button>
+                    <button type="submit"> Edit </button>
+                    <button onClick={isClose}> Close </button>
                 </form>
             </section>
         </>
     )
 }
 
-export default HomesForm
+export default EditModal
