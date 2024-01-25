@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import ImagePicker from "../ImagePicker/ImagePicker";
 import { useEffect, useState } from "react";
 import '../../components/HomesForm/homes-form.css';
+import useHomes from "../../hooks/useHomes";
+import { updateImagesInStorage } from "../../firebase/storage";
 
 
 function EditModal({ isOpen, isClose, currentHome }) {
@@ -9,42 +11,80 @@ function EditModal({ isOpen, isClose, currentHome }) {
         register,
         handleSubmit,
         formState: { errors },
-        watch,
+        // watch,
         reset,
         setValue
     } = useForm();
-    const [images, setImages] = useState([]);
-    const [fileUrls, setFileUrls] = useState([]);
-    const [isEdit, setIsEdit] = useState(true)
+    // const [images, setImages] = useState([]);
+    // const [fileUrls, setFileUrls] = useState([]);
+    const [existingImages, setExistingImages] = useState([]);
+    const [newFiles, setNewFiles] = useState([]);
+    const [selectedAmenities, setSelectedAmenities] = useState([]);
+    const [isEdit, setIsEdit] = useState(true);
+    const { updateHome } = useHomes()
 
-    const homeName = watch('homeName', '');
+    // const homeName = watch('homeName', '');
 
-    const arrayImages = currentHome.urlImages.split(',');
+    // const arrayImages = currentHome.urlImages.split(',');
 
 
-    console.log(currentHome)
-    console.log(arrayImages)
+    // console.log(currentHome)
+    // console.log(arrayImages)
+
+
 
     useEffect(() => {
         if (currentHome) {
-            setImages(arrayImages);
-            setValue('images', arrayImages);
-            reset(currentHome)
+            setExistingImages(currentHome.urlImages.split(','));
+            setSelectedAmenities(currentHome.amenities ? currentHome.amenities.split(',') : []);
+            setValue('urlImages', existingImages);
+            setValue('amenities', selectedAmenities)
+            reset(currentHome);
         }
-    }, [currentHome, reset, setValue]);
+    }, [currentHome, reset]);
 
-    const removeImageFromEditModal = async (index, fileName) => {
-        const updatedImages = [...images];
-        const updatedFileUrls = [...fileUrls];
+    const handleImageChange = (e) => {
+        setNewFiles(Array.from(e.target.files));
 
-        await removeImageFromImagePicker(homeName, fileName)
-
-        updatedImages.splice(index, 1);
-        updatedFileUrls.splice(index, 1);
-
-        setImages(updatedImages);
-        setFileUrls(updatedFileUrls);
     };
+
+    const handleAmenitiesChange = () => {
+        const selectedOptions = Array.from(e.target.SelectedOptions, (option) => option.value)
+        setSelectedAmenities(selectedOptions);
+    }
+
+    const handleRemoveExistingImage = (imageToRemove) => {
+        setExistingImages(existingImages.filter(image => image !== imageToRemove));
+    };
+
+    const handleFormSubmit = async (data) => {
+        try {
+
+            const updateData = {
+                ...data,
+                amenities: selectedAmenities.join(', ')
+            }
+            await updateHome(currentHome.id, updateData, newFiles, existingImages);
+            console.log(data)
+            isClose();
+
+        } catch (error) {
+            console.error('Error updating home:', error);
+        }
+    };
+
+    // const removeImageFromEditModal = async (index, fileName) => {
+    //     const updatedImages = [...images];
+    //     const updatedFileUrls = [...fileUrls];
+
+    //     await removeImageFromImagePicker(homeName, fileName)
+
+    //     updatedImages.splice(index, 1);
+    //     updatedFileUrls.splice(index, 1);
+
+    //     setImages(updatedImages);
+    //     setFileUrls(updatedFileUrls);
+    // };
 
     if (!isOpen) return null;
 
@@ -55,14 +95,14 @@ function EditModal({ isOpen, isClose, currentHome }) {
 
                 <form
                     className='homes-form modal-content'
-                    onSubmit={handleSubmit((data) => handleFormSubmit(data, homeName))}>
+                    onSubmit={handleSubmit(handleFormSubmit)}>
 
                     <div>
                         <label htmlFor="home">
                             Home name *
                         </label>
                         <input
-                            onInput={(e) => handleChange(e, homeName)}
+                            // onInput={(e) => handleChange(e, homeName)}
                             placeholder='Saona, Ribes...'
                             id="home"
                             type="text"
@@ -295,14 +335,14 @@ function EditModal({ isOpen, isClose, currentHome }) {
                     {errors.touristLicense && <p>{errors.touristLicense.message}</p>}
 
                     <div>
-                        <label htmlFor="images">
+                        <label htmlFor="urlImages">
                             Add images *
                         </label>
                         <input
-                            onInput={(e) => handleChange(e, register('homeName').value)}
-                            id="images"
+                            onChange={handleImageChange}
+                            id="urlImages"
                             type="file"
-                            {...register('images',
+                            {...register('urlImages',
                                 {
                                     required: '❌ Images are required',
                                 })}
@@ -311,8 +351,10 @@ function EditModal({ isOpen, isClose, currentHome }) {
                     </div>
                     {errors.images && <p>{errors.images.message}</p>}
 
-                    {images.length > 0
-                        ? <ImagePicker imageFile={images} onRemoveImage={isEdit ? removeImageFromEditModal : handleRemoveImage} />
+                    {newFiles.length > 0
+                        ? <ImagePicker
+                            imageFile={isEdit ? newFiles : images}
+                            onRemoveImage={isEdit ? handleRemoveExistingImage : handleRemoveImage} />
                         : null
                     }
 
@@ -371,6 +413,8 @@ function EditModal({ isOpen, isClose, currentHome }) {
                             Amenities (At least three) *
                         </label>
                         <select
+                            onChange={handleAmenitiesChange}
+                            value={selectedAmenities}
                             id="amenities"
                             multiple
                             {...register('amenities',

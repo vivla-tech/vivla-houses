@@ -50,30 +50,30 @@ function HomesForm() {
             await airtableBase('homes').create([
                 {
                     fields: {
-                        "Home Name": data.homeName,
-                        "Hub": data.hub,
-                        "Market": data.market,
-                        "Address": data.address,
-                        "Coordinates": data.coordinates,
-                        "Price": data.price,
-                        "Bedrooms": data.bedrooms,
-                        "Bathrooms": data.bathrooms,
-                        "Home SQM": data.homeSQM,
-                        "Plot SQM": data.plotSQM,
-                        "Home Collection": data.homeCollection,
-                        "Home Types": data.homeTypes,
-                        "Home Subtype": data.homeSubtype,
-                        "Home Status": data.homeStatus,
-                        "Is Furnished": data.isFurnished,
-                        "Tourist License": data.touristLicense,
-                        "URL Images": imagesString,
-                        "Video": data.video,
-                        "Matterport": data.matterport,
-                        "Plots": plotsString,
-                        "Description": data.description,
-                        "Amenities": amenitiesString,
-                        "Visibility": data.visibility,
-                        "Internal Notes": data.internalNotes,
+                        homeName: data.homeName,
+                        hub: data.hub,
+                        market: data.market,
+                        address: data.address,
+                        coordinates: data.coordinates,
+                        price: data.price,
+                        bedrooms: data.bedrooms,
+                        bathrooms: data.bathrooms,
+                        homeSQM: data.homeSQM,
+                        plotSQM: data.plotSQM,
+                        homeCollection: data.homeCollection,
+                        homeTypes: data.homeTypes,
+                        homeSubtype: data.homeSubtype,
+                        homeStatus: data.homeStatus,
+                        isFurnished: data.isFurnished,
+                        touristLicense: data.touristLicense,
+                        urlImages: imagesString,
+                        video: data.video,
+                        matterport: data.matterport,
+                        plots: plotsString,
+                        description: data.description,
+                        amenities: amenitiesString,
+                        visibility: data.visibility,
+                        internalNotes: data.internalNotes,
                     }
                 }
             ])
@@ -81,7 +81,7 @@ function HomesForm() {
             reset();
             setImages([]);
             setFileUrls([]);
-            document.getElementById('images').value = '';
+            document.getElementById('urlImages').value = '';
 
         } catch (error) {
             console.error('error submit form', error)
@@ -348,12 +348,12 @@ function HomesForm() {
                     {errors.touristLicense && <p>{errors.touristLicense.message}</p>}
 
                     <div>
-                        <label htmlFor="images">
+                        <label htmlFor="urlImages">
                             Add images *
                         </label>
                         <input
                             onInput={(e) => handleChange(e, register('homeName').value)}
-                            id="images"
+                            id="urlImages"
                             type="file"
                             {...register('images',
                                 {
