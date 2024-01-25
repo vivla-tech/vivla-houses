@@ -35,10 +35,12 @@ function EditModal({ isOpen, isClose, currentHome }) {
 
     useEffect(() => {
         if (currentHome) {
-            setExistingImages(currentHome.urlImages.split(','));
-            setSelectedAmenities(currentHome.amenities ? currentHome.amenities.split(',') : []);
-            setValue('urlImages', existingImages);
-            setValue('amenities', selectedAmenities)
+            const imagesUrls = currentHome.urlImages ? currentHome.urlImages.split(',') : [];
+            const amenitiesArray = currentHome.amenities ? currentHome.amenities.split(',') : [];
+
+            setExistingImages(imagesUrls);
+            setSelectedAmenities(amenitiesArray);
+            setValue('urlImages', existingImages)
             reset(currentHome);
         }
     }, [currentHome, reset]);
