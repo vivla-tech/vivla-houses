@@ -15,22 +15,12 @@ function EditModal({ isOpen, isClose, currentHome }) {
         reset,
         setValue
     } = useForm();
-    // const [images, setImages] = useState([]);
-    // const [fileUrls, setFileUrls] = useState([]);
+
     const [existingImages, setExistingImages] = useState([]);
     const [newFiles, setNewFiles] = useState([]);
-    const [selectedAmenities, setSelectedAmenities] = useState([]);
+    const [currentAmenities, setCurrentAmenities] = useState(currentHome.amenities.split(','))
     const [isEdit, setIsEdit] = useState(true);
     const { updateHome } = useHomes()
-
-    // const homeName = watch('homeName', '');
-
-    // const arrayImages = currentHome.urlImages.split(',');
-
-
-    // console.log(currentHome)
-    // console.log(arrayImages)
-
 
 
     useEffect(() => {
@@ -39,20 +29,22 @@ function EditModal({ isOpen, isClose, currentHome }) {
             const amenitiesArray = currentHome.amenities ? currentHome.amenities.split(',') : [];
 
             setExistingImages(imagesUrls);
-            setSelectedAmenities(amenitiesArray);
             setValue('urlImages', existingImages)
-            reset(currentHome);
+            reset({ ...currentHome, amenities: amenitiesArray });
         }
-    }, [currentHome, reset]);
+    }, [currentHome, reset, setValue]);
 
     const handleImageChange = (e) => {
         setNewFiles(Array.from(e.target.files));
 
     };
 
-    const handleAmenitiesChange = () => {
-        const selectedOptions = Array.from(e.target.SelectedOptions, (option) => option.value)
-        setSelectedAmenities(selectedOptions);
+    const handleAmenitiesChange = (e) => {
+        const selectedOptions = Array.from(e.target.options)
+            .filter(option => option.selected)
+            .map(option => option.value);
+        setValue('amenities', selectedOptions);
+        setSelectedAmenities(selectedOptions)
     }
 
     const handleRemoveExistingImage = (imageToRemove) => {
@@ -64,7 +56,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
 
             const updateData = {
                 ...data,
-                amenities: selectedAmenities.join(', ')
+                amenities: data.amenities.join(',')
             }
             await updateHome(currentHome.id, updateData, newFiles, existingImages);
             console.log(data)
@@ -74,19 +66,6 @@ function EditModal({ isOpen, isClose, currentHome }) {
             console.error('Error updating home:', error);
         }
     };
-
-    // const removeImageFromEditModal = async (index, fileName) => {
-    //     const updatedImages = [...images];
-    //     const updatedFileUrls = [...fileUrls];
-
-    //     await removeImageFromImagePicker(homeName, fileName)
-
-    //     updatedImages.splice(index, 1);
-    //     updatedFileUrls.splice(index, 1);
-
-    //     setImages(updatedImages);
-    //     setFileUrls(updatedFileUrls);
-    // };
 
     if (!isOpen) return null;
 
@@ -341,7 +320,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
                             Add images *
                         </label>
                         <input
-                            onChange={handleImageChange}
+                            onInput={handleImageChange}
                             id="urlImages"
                             type="file"
                             {...register('urlImages',
@@ -416,15 +395,14 @@ function EditModal({ isOpen, isClose, currentHome }) {
                         </label>
                         <select
                             onChange={handleAmenitiesChange}
-                            value={selectedAmenities}
                             id="amenities"
                             multiple
+                            defaultValue={currentAmenities || []}
                             {...register('amenities',
                                 { required: '❌ Amenities are required' })} >
                             <option hidden value="" > Add amenities</option>
                             <option value="24/7 Concierge"> 24/7 Concierge</option>
                             <option value="Aerothermia"> Aerothermia</option>
-                            <option value="Air conditioning"> Air conditioning</option>
                             <option value="Air conditioning"> Air conditioning</option>
                             <option value="Airport proximity"> Airport proximity</option>
                             <option value="Alarm services"> Alarm services</option>
