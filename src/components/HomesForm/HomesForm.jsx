@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { airtableBase } from '../../services/airtableServices';
+import { axiosInstance } from '../../services/airtableServices';
 import ImagePicker from '../ImagePicker/ImagePicker';
 import { removeImageFromImagePicker, uploadFiletoStorage } from '../../firebase/storage';
 import './homes-form.css';
@@ -46,37 +46,39 @@ function HomesForm() {
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
             const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
             const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
-            console.log(data)
-            await airtableBase('homes').create([
-                {
-                    fields: {
-                        homeName: data.homeName,
-                        hub: data.hub,
-                        market: data.market,
-                        address: data.address,
-                        coordinates: data.coordinates,
-                        price: data.price,
-                        bedrooms: data.bedrooms,
-                        bathrooms: data.bathrooms,
-                        homeSQM: data.homeSQM,
-                        plotSQM: data.plotSQM,
-                        homeCollection: data.homeCollection,
-                        homeTypes: data.homeTypes,
-                        homeSubtype: data.homeSubtype,
-                        homeStatus: data.homeStatus,
-                        isFurnished: data.isFurnished,
-                        touristLicense: data.touristLicense,
-                        urlImages: imagesString,
-                        video: data.video,
-                        matterport: data.matterport,
-                        plots: plotsString,
-                        description: data.description,
-                        amenities: amenitiesString,
-                        visibility: data.visibility,
-                        internalNotes: data.internalNotes,
-                    }
+            console.log(data);
+
+            const payload = {
+                fields: {
+                    homeName: data.homeName,
+                    hub: data.hub,
+                    market: data.market,
+                    address: data.address,
+                    coordinates: data.coordinates,
+                    price: data.price,
+                    bedrooms: data.bedrooms,
+                    bathrooms: data.bathrooms,
+                    homeSQM: data.homeSQM,
+                    plotSQM: data.plotSQM,
+                    homeCollection: data.homeCollection,
+                    homeTypes: data.homeTypes,
+                    homeSubtype: data.homeSubtype,
+                    homeStatus: data.homeStatus,
+                    isFurnished: data.isFurnished,
+                    touristLicense: data.touristLicense,
+                    urlImages: imagesString,
+                    video: data.video,
+                    matterport: data.matterport,
+                    plots: plotsString,
+                    description: data.description,
+                    amenities: amenitiesString,
+                    visibility: data.visibility,
+                    internalNotes: data.internalNotes,
                 }
-            ])
+            }
+            await axiosInstance.post('/homes', payload);
+
+
             console.log('submit correctly', data)
             reset();
             setImages([]);
