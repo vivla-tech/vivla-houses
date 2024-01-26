@@ -15,38 +15,36 @@ function HomesForm() {
     } = useForm();
 
     const [images, setImages] = useState([]);
-    const [fileUrls, setFileUrls] = useState([]);
 
-    const homeName = watch('homeName', '');
+    const [newFiles, setNewFiles] = useState([])
+
 
     const handleChange = async (e) => {
         try {
+            setNewFiles(Array.from(e.target.files));
+
             const files = Array.from(e.target.files);
 
-            // cargar los archivos en storage
-            // dentro de una carpeta con el nombre de la casa
-            const urls = await uploadFiletoStorage(files, homeName);
 
             setImages((prevImages) => [...prevImages, ...files]);
-            setFileUrls((prevUrls) => [...prevUrls, ...urls]);
 
-            console.log('images upload:', [...images, ...files]);
-            console.log('images url upload:', [...fileUrls, ...urls]);
+            console.log('images upload:', [...newFiles, ...files]);
         } catch (error) {
             console.error('Error al manejar cambios en las imágenes:', error.message);
         }
     };
 
+    const handleRemoveImage = (fileName) => {
+        setNewFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+        setImages((prevImages) => prevImages.filter(image => image.name !== fileName));
+    };
+
 
     const handleFormSubmit = async (data) => {
         try {
-
             const { plots, amenities } = data;
-
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
-            const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
             const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
-            console.log(data);
 
             const payload = {
                 fields: {
@@ -66,7 +64,7 @@ function HomesForm() {
                     homeStatus: data.homeStatus,
                     isFurnished: data.isFurnished,
                     touristLicense: data.touristLicense,
-                    urlImages: imagesString,
+                    urlImages: '',
                     video: data.video,
                     matterport: data.matterport,
                     plots: plotsString,
@@ -76,13 +74,25 @@ function HomesForm() {
                     internalNotes: data.internalNotes,
                 }
             }
-            await axiosInstance.post('/homes', payload);
+            const response = await axiosInstance.post('/homes', payload);
+            const homeId = response.data.id;
 
+            if (newFiles.length > 0) {
+                const newImageUrls = await uploadFiletoStorage(newFiles, homeId.toString());
 
-            console.log('submit correctly', data)
+                const updatePayload = {
+                    fields: {
+                        id: homeId,
+                        urlImages: newImageUrls.join(', ')
+                    }
+                };
+                const patchResponse = await axiosInstance.patch(`/homes/${homeId}`, updatePayload)
+                console.log('update dataa', patchResponse)
+            }
+
             reset();
             setImages([]);
-            setFileUrls([]);
+            setNewFiles([])
             document.getElementById('urlImages').value = '';
 
         } catch (error) {
@@ -90,18 +100,6 @@ function HomesForm() {
         }
     }
 
-    const handleRemoveImage = async (index, fileName) => {
-        const updatedImages = [...images];
-        const updatedFileUrls = [...fileUrls];
-
-        await removeImageFromImagePicker(homeName, fileName)
-
-        updatedImages.splice(index, 1);
-        updatedFileUrls.splice(index, 1);
-
-        setImages(updatedImages);
-        setFileUrls(updatedFileUrls);
-    };
 
     return (
         <>
@@ -110,14 +108,13 @@ function HomesForm() {
 
                 <form
                     className='homes-form'
-                    onSubmit={handleSubmit((data) => handleFormSubmit(data, homeName))}>
+                    onSubmit={handleSubmit((data) => handleFormSubmit(data))}>
 
                     <div>
                         <label htmlFor="home">
                             Home name *
                         </label>
                         <input
-                            onInput={(e) => handleChange(e, homeName)}
                             placeholder='Saona, Ribes...'
                             id="home"
                             type="text"
