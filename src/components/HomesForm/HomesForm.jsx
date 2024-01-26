@@ -15,7 +15,6 @@ function HomesForm() {
     } = useForm();
 
     const [images, setImages] = useState([]);
-    const [fileUrls, setFileUrls] = useState([]);
 
     const [newFiles, setNewFiles] = useState([])
 
@@ -26,29 +25,26 @@ function HomesForm() {
 
             const files = Array.from(e.target.files);
 
-            // cargar los archivos en storage
-            // dentro de una carpeta con el nombre de la casa
-            // const urls = await uploadFiletoStorage(files, homeName);
 
             setImages((prevImages) => [...prevImages, ...files]);
-            // setFileUrls((prevUrls) => [...prevUrls, ...urls]);
 
-            console.log('images upload:', [...images, ...files]);
-            console.log('images url upload:', [...fileUrls, ...urls]);
+            console.log('images upload:', [...newFiles, ...files]);
         } catch (error) {
             console.error('Error al manejar cambios en las imágenes:', error.message);
         }
+    };
+
+    const handleRemoveImage = (fileName) => {
+        setNewFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+        setImages((prevImages) => prevImages.filter(image => image.name !== fileName));
     };
 
 
     const handleFormSubmit = async (data) => {
         try {
             const { plots, amenities } = data;
-
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
-            // const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
             const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
-            console.log(data);
 
             const payload = {
                 fields: {
@@ -94,12 +90,8 @@ function HomesForm() {
                 console.log('update dataa', patchResponse)
             }
 
-
-
-            console.log('submit correctly', data)
             reset();
             setImages([]);
-            setFileUrls([]);
             setNewFiles([])
             document.getElementById('urlImages').value = '';
 
@@ -108,18 +100,6 @@ function HomesForm() {
         }
     }
 
-    const handleRemoveImage = async (index, fileName) => {
-        const updatedImages = [...images];
-        const updatedFileUrls = [...fileUrls];
-
-        await removeImageFromImagePicker(homeName, fileName)
-
-        updatedImages.splice(index, 1);
-        updatedFileUrls.splice(index, 1);
-
-        setImages(updatedImages);
-        setFileUrls(updatedFileUrls);
-    };
 
     return (
         <>
