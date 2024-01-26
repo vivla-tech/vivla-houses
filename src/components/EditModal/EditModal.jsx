@@ -30,7 +30,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
 
             setExistingImages(imagesUrls);
             setValue('urlImages', existingImages)
-            reset({ ...currentHome, amenities: amenitiesArray });
+            reset({ ...currentHome, amenities: amenitiesArray, urlImages: imagesUrls });
         }
     }, [currentHome, reset, setValue]);
 
@@ -47,19 +47,17 @@ function EditModal({ isOpen, isClose, currentHome }) {
         setSelectedAmenities(selectedOptions)
     }
 
-    const handleRemoveExistingImage = (imageToRemove) => {
-        setExistingImages(existingImages.filter(image => image !== imageToRemove));
+    const handleRemoveExistingImage = (url) => {
+        setExistingImages((prevUrls) => prevUrls.filter(imageUrl => imageUrl !== url));
     };
 
     const handleFormSubmit = async (data) => {
         try {
-
-            const updateData = {
+            const updateFields = {
                 ...data,
                 amenities: data.amenities.join(',')
-            }
-            await updateHome(currentHome.id, updateData, newFiles, existingImages);
-            console.log(data)
+            };
+            await updateHome(currentHome.id, updateFields, newFiles, existingImages);
             isClose();
 
         } catch (error) {

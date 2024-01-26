@@ -18,7 +18,7 @@ function useHomes() {
         };
 
         fetchData();
-    }, []);
+    }, [homes]);
 
     const removeHome = async (id) => {
         const homeToDelete = homes.find(home => home.id === id);
@@ -28,25 +28,17 @@ function useHomes() {
         setHomes(prevHome => prevHome.filter(home => home.id !== id))
     }
 
-    const updateHome = async (id, updatedFields, newFiles, existingImages) => {
+    const updateHome = async (id, updateFields, newFiles, existingImages) => {
         try {
-            const homeToUpdate = homes.find(home => home.id === id);
+            const updatedImageUrls = await updateImagesInStorage(id, newFiles, existingImages);
 
-            let updatedImageUrls = existingImages;
+            const finalUpdateFields = { ...updateFields, urlImages: updatedImageUrls.join(', ') };
 
-            if (newFiles && newFiles.length > 0) {
-                const homeName = updatedFields.homeName || homeToUpdate.homeName;
-                const newImageUrls = await updateImagesInStorage(homeName, newFiles);
-                updatedImageUrls = updatedImageUrls.concat(newImageUrls);
-            }
-
-            updatedFields = { ...updatedFields, urlImages: updatedImageUrls.join(', ') };
-
-            const updatedRecord = await updateHomeData(id, updatedFields);
+            const updatedRecord = await updateHomeData(id, finalUpdateFields);
 
             setHomes(prevHomes =>
                 prevHomes.map(home => home.id === id
-                    ? { ...home, ...updatedFields }
+                    ? { ...home, ...finalUpdateFields }
                     : home
                 )
             );

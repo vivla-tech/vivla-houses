@@ -42,18 +42,21 @@ export const removeImageFromStorage = async (folderPath) => {
     }
 };
 
-export const updateImagesInStorage = async (homeName, newFiles) => {
+export const updateImagesInStorage = async (homeId, newFiles, existingImagesUrls) => {
     try {
-        const formattedHomeName = homeName.replace(/\s+/g, '-');
+        const updatedImageUrls = [];
 
-        await removeImageFromStorage(formattedHomeName);
+        if (newFiles.length > 0) {
+            const newImageUrls = await uploadFiletoStorage(newFiles, homeId);
+            updatedImageUrls.push(...newImageUrls);
+        }
 
-        const newImageUrls = await uploadFiletoStorage(newFiles, formattedHomeName);
+        updatedImageUrls.push(...existingImagesUrls);
 
-        return newImageUrls;
+        return updatedImageUrls;
 
     } catch (error) {
         console.error('Error updating images in storage:', error);
     }
-}
+};
 
