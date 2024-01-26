@@ -24,7 +24,7 @@ function useHomes() {
         const homeToDelete = homes.find(home => home.id === id);
 
         await removeHomesData(id)
-        await removeImageFromStorage(homeToDelete.homeName)
+        await removeImageFromStorage(homeToDelete.id)
         setHomes(prevHome => prevHome.filter(home => home.id !== id))
     }
 

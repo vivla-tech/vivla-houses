@@ -26,8 +26,7 @@ export const removeImageFromImagePicker = async (filePath, fileName) => {
 
 export const removeImageFromStorage = async (folderPath) => {
     try {
-        const formattedFolderPath = folderPath.replace(/\s+/g, '-');
-        const folderRef = ref(storage, `images/${formattedFolderPath}/`);
+        const folderRef = ref(storage, `images/${folderPath}/`);
 
         const folderContents = await list(folderRef);
 
@@ -35,7 +34,7 @@ export const removeImageFromStorage = async (folderPath) => {
             await deleteObject(ref(storage, item.fullPath));
         }
 
-        await deleteObject(folderRef);
+        // await deleteObject(folderRef);
 
         console.log('Remove image correctly');
     } catch (error) {
