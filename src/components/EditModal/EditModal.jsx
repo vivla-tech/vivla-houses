@@ -330,11 +330,11 @@ function EditModal({ isOpen, isClose, currentHome }) {
                             multiple
                         />
                     </div>
-                    {errors.images && <p>{errors.images.message}</p>}
+                    {errors.urlImages && <p>{errors.urlImages.message}</p>}
 
-                    {newFiles.length > 0
+                    {newFiles.length > 0 || existingImages.length > 0
                         ? <ImagePicker
-                            imageFile={isEdit ? newFiles : images}
+                            imageFile={isEdit ? existingImages : newFiles}
                             onRemoveImage={isEdit ? handleRemoveExistingImage : handleRemoveImage} />
                         : null
                     }
