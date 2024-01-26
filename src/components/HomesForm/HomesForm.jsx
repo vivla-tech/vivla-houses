@@ -22,7 +22,7 @@ function HomesForm() {
 
     const handleChange = async (e) => {
         try {
-            setNewFiles(Array.from(e.target.value));
+            setNewFiles(Array.from(e.target.files));
 
             const files = Array.from(e.target.files);
 
