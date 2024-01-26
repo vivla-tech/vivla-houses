@@ -17,18 +17,21 @@ function HomesForm() {
     const [images, setImages] = useState([]);
     const [fileUrls, setFileUrls] = useState([]);
 
-    const homeName = watch('homeName', '');
+    const [newFiles, setNewFiles] = useState([])
+
 
     const handleChange = async (e) => {
         try {
+            setNewFiles(Array.from(e.target.value));
+
             const files = Array.from(e.target.files);
 
             // cargar los archivos en storage
             // dentro de una carpeta con el nombre de la casa
-            const urls = await uploadFiletoStorage(files, homeName);
+            // const urls = await uploadFiletoStorage(files, homeName);
 
             setImages((prevImages) => [...prevImages, ...files]);
-            setFileUrls((prevUrls) => [...prevUrls, ...urls]);
+            // setFileUrls((prevUrls) => [...prevUrls, ...urls]);
 
             console.log('images upload:', [...images, ...files]);
             console.log('images url upload:', [...fileUrls, ...urls]);
@@ -40,11 +43,10 @@ function HomesForm() {
 
     const handleFormSubmit = async (data) => {
         try {
-
             const { plots, amenities } = data;
 
             const plotsString = Array.isArray(plots) ? plots.join(', ') : '';
-            const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
+            // const imagesString = Array.isArray(fileUrls) ? fileUrls.join(', ') : '';
             const amenitiesString = Array.isArray(amenities) ? amenities.join(', ') : '';
             console.log(data);
 
@@ -66,7 +68,7 @@ function HomesForm() {
                     homeStatus: data.homeStatus,
                     isFurnished: data.isFurnished,
                     touristLicense: data.touristLicense,
-                    urlImages: imagesString,
+                    urlImages: '',
                     video: data.video,
                     matterport: data.matterport,
                     plots: plotsString,
@@ -76,13 +78,29 @@ function HomesForm() {
                     internalNotes: data.internalNotes,
                 }
             }
-            await axiosInstance.post('/homes', payload);
+            const response = await axiosInstance.post('/homes', payload);
+            const homeId = response.data.id;
+
+            if (newFiles.length > 0) {
+                const newImageUrls = await uploadFiletoStorage(newFiles, homeId.toString());
+
+                const updatePayload = {
+                    fields: {
+                        id: homeId,
+                        urlImages: newImageUrls.join(', ')
+                    }
+                };
+                const patchResponse = await axiosInstance.patch(`/homes/${homeId}`, updatePayload)
+                console.log('update dataa', patchResponse)
+            }
+
 
 
             console.log('submit correctly', data)
             reset();
             setImages([]);
             setFileUrls([]);
+            setNewFiles([])
             document.getElementById('urlImages').value = '';
 
         } catch (error) {
@@ -110,14 +128,13 @@ function HomesForm() {
 
                 <form
                     className='homes-form'
-                    onSubmit={handleSubmit((data) => handleFormSubmit(data, homeName))}>
+                    onSubmit={handleSubmit((data) => handleFormSubmit(data))}>
 
                     <div>
                         <label htmlFor="home">
                             Home name *
                         </label>
                         <input
-                            onInput={(e) => handleChange(e, homeName)}
                             placeholder='Saona, Ribes...'
                             id="home"
                             type="text"

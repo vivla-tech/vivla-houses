@@ -13,6 +13,7 @@ function ImagePicker({ imageFile, onRemoveImage }) {
         return fileName;
     };
 
+
     return (
         <section className='img-container'>
             {imageFile?.map((image, index) => {
@@ -24,7 +25,11 @@ function ImagePicker({ imageFile, onRemoveImage }) {
                     <div key={isFile ? image.name : index}>
                         <img src={imageUrl} alt={`Preview ${imageName}`} />
                         <p className='file-name'>{imageName}</p>
-                        <button type='button' onClick={() => onRemoveImage(index, imageName)}>
+                        <button type='button' onClick={() => {
+                            isFile
+                                ? onRemoveImage(index, imageName)
+                                : onRemoveExistingImage()
+                        }}>
                             Remove
                         </button>
                     </div>
