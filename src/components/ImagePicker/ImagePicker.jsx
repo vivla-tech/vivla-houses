@@ -1,6 +1,6 @@
 import './image-picker.css';
 
-function ImagePicker({ imageFile, onRemoveImage }) {
+function ImagePicker({ imageFile, onRemoveImage, onRemoveExistingImage }) {
 
     const obtainNameFromUrl = (url) => {
         const decodedUrl = decodeURIComponent(url);
@@ -27,7 +27,7 @@ function ImagePicker({ imageFile, onRemoveImage }) {
                         <button type='button' onClick={() => {
                             isFile
                                 ? onRemoveImage(imageName)
-                                : onRemoveExistingImage()
+                                : onRemoveExistingImage(image)
                         }}>
                             Remove
                         </button>
