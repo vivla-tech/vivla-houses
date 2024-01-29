@@ -330,7 +330,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
 
                     {newFiles.length > 0 || existingImages.length > 0
                         ? <ImagePicker
-                            imageFile={isEdit ? existingImages : newFiles}
+                            imageFile={/* existingImages || newFiles ||*/[...newFiles, ...existingImages]}
                             onRemoveImage={!isEdit ? handleRemoveImage : null}
                             onRemoveExistingImage={handleRemoveExistingImage}
                         />
