@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import ImagePicker from "../ImagePicker/ImagePicker";
 import { useEffect, useState } from "react";
-import '../../components/HomesForm/homes-form.css';
 import useHomes from "../../hooks/useHomes";
-import { updateImagesInStorage } from "../../firebase/storage";
+import '../../components/HomesForm/homes-form.css';
+
 
 
 function EditModal({ isOpen, isClose, currentHome }) {
@@ -11,14 +11,13 @@ function EditModal({ isOpen, isClose, currentHome }) {
         register,
         handleSubmit,
         formState: { errors },
-        // watch,
         reset,
         setValue
     } = useForm();
 
     const [existingImages, setExistingImages] = useState([]);
     const [newFiles, setNewFiles] = useState([]);
-    const [currentAmenities, setCurrentAmenities] = useState(currentHome.amenities.split(','))
+    const [currentAmenities, setCurrentAmenities] = useState([]);
     const [isEdit, setIsEdit] = useState(true);
     const { updateHome } = useHomes()
 
@@ -29,8 +28,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
             const amenitiesArray = currentHome.amenities ? currentHome.amenities.split(',') : [];
 
             setExistingImages(imagesUrls);
-            setValue('urlImages', existingImages)
-            reset({ ...currentHome, amenities: amenitiesArray, urlImages: imagesUrls });
+            reset({ ...currentHome, amenities: amenitiesArray, urlImages: existingImages });
         }
     }, [currentHome, reset, setValue]);
 
@@ -323,7 +321,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
                             type="file"
                             {...register('urlImages',
                                 {
-                                    required: '❌ Images are required',
+                                    required: existingImages.length < 0 && '❌ Images are required',
                                 })}
                             multiple
                         />
@@ -332,7 +330,7 @@ function EditModal({ isOpen, isClose, currentHome }) {
 
                     {newFiles.length > 0 || existingImages.length > 0
                         ? <ImagePicker
-                            imageFile={isEdit ? existingImages : newFiles}
+                            imageFile={/* existingImages || newFiles ||*/[...newFiles, ...existingImages]}
                             onRemoveImage={!isEdit ? handleRemoveImage : null}
                             onRemoveExistingImage={handleRemoveExistingImage}
                         />

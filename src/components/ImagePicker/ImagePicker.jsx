@@ -27,7 +27,7 @@ function ImagePicker({ imageFile, onRemoveImage, onRemoveExistingImage }) {
                         <button type='button' onClick={() => {
                             isFile
                                 ? onRemoveImage(imageName)
-                                : onRemoveExistingImage(image)
+                                : onRemoveExistingImage(imageUrl)
                         }}>
                             Remove
                         </button>
